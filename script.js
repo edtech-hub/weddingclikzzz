@@ -530,17 +530,13 @@ function observeFormSections() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
+                entry.target.classList.add('visible');
             }
         });
     }, options);
 
     const sections = document.querySelectorAll('.form-section, .feature-card');
     sections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(30px)';
-        section.style.transition = 'all 0.6s ease-out';
         observer.observe(section);
     });
 }

@@ -1,19 +1,19 @@
-# WeddingClikzzz - Premium Indian Wedding Photography Booking Website
+# WeddingClikzzz - Professional Wedding Photography Booking Website
 
-A luxurious, premium-themed Indian wedding photography booking website that provides an elegant experience for customers to select services and receive detailed invoices. Designed with rich Indian wedding aesthetics featuring gold, maroon, and burgundy color schemes with ornamental elements.
+A clean, modern wedding photography booking website that provides an elegant and professional experience for customers to select services and receive detailed invoices. Designed with a minimalist aesthetic featuring refined typography and a sophisticated color palette.
 
 ## Features
 
-- **Premium Indian Wedding Theme**: Elegant design with traditional Indian aesthetics, rich colors (gold, maroon, burgundy), and ornamental details
-- **Hero Section**: Stunning hero banner with elegant typography and smooth scroll to booking form
+- **Modern Minimalist Design**: Clean, professional aesthetic with focus on usability and elegance
+- **Hero Section**: Stunning full-height hero banner with refined typography and smooth scroll navigation
 - **Event Selection**: Choose from multiple wedding events (Reception, Haldi, Marriage, Engagement, Mehendi, Sangeet)
-- **Service Selection**: Select photography and videography services for each event with beautiful card-based UI
-- **Automatic Price Calculation**: Real-time pricing with subtotal, GST (18%), and total in elegant presentation
+- **Service Selection**: Select photography and videography services for each event with clean card-based UI
+- **Automatic Price Calculation**: Real-time pricing with subtotal, GST (18%), and total
 - **Professional PDF Invoice**: Branded invoice with itemized services
 - **Email Delivery**: Automated email delivery to customer and company
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **Smooth Animations**: Scroll-triggered animations and smooth transitions
-- **Elegant Typography**: Premium Google Fonts (Cormorant Garamond, Great Vibes, Montserrat)
+- **Responsive Design**: Fully responsive layout that works seamlessly on all devices
+- **Smooth Animations**: Subtle scroll-triggered animations and transitions
+- **Premium Typography**: Elegant Google Fonts (Cormorant Garamond, Montserrat)
 
 ## Services Offered
 
@@ -30,36 +30,40 @@ A luxurious, premium-themed Indian wedding photography booking website that prov
 
 ## Design Theme
 
-### Premium Indian Wedding Aesthetics
+### Modern Professional Aesthetics
 
-The website features a luxurious Indian wedding theme with:
+The website features a clean, minimalist design focused on elegance and usability:
 
 **Color Palette:**
-- Primary Gold (#D4AF37) - For accents, ornaments, and CTAs
-- Maroon (#800020) & Burgundy (#8B0000) - For headers and primary elements
-- Cream (#FFF8DC) & Ivory (#FFFFF0) - For backgrounds
-- Dark Brown (#3E2723) - For footer and dark sections
+- **Primary Gold (#C9A961)**: Subtle accent color for CTAs and highlights
+- **Text Primary (#2C2C2C)**: Main text color for optimal readability
+- **Text Secondary (#6B6B6B)**: Supporting text and secondary information
+- **Background White (#FFFFFF)**: Clean white backgrounds
+- **Background Subtle (#F9F9F9)**: Light gray for section differentiation
+- **Background Cream (#FAF8F5)**: Warm neutral for feature sections
+- **Border Light (#E8E8E8)**: Subtle borders and dividers
 
 **Typography:**
-- **Cormorant Garamond**: Elegant serif font for headings and formal text
-- **Great Vibes**: Cursive script font for romantic quotes and taglines
-- **Montserrat**: Modern sans-serif for body text and UI elements
+- **Cormorant Garamond**: Elegant serif font for headings and titles (400 weight for refined look)
+- **Montserrat**: Modern sans-serif for body text and UI elements (300-500 weights)
+- Clean, readable font sizes with proper hierarchy
+- Generous letter-spacing for refined feel
 
-**Design Elements:**
-- Ornamental dividers and decorative symbols (✦, ❖, ◆)
-- Gradient backgrounds with radial overlays
-- Gold borders and accents
-- Step numbers with premium styling
-- Smooth hover effects and transitions
-- Scroll-triggered animations
-- Custom gold-themed scrollbar
+**Design Principles:**
+- Minimalist aesthetic with focus on content
+- Generous white space for breathing room
+- Subtle shadows for depth (no heavy effects)
+- Clean borders and simple shapes
+- Refined hover states with subtle animations
+- Scroll-triggered fade-in animations
+- Professional card-based layouts
 
 **Sections:**
-1. **Sticky Navigation**: Maroon gradient with gold accents
-2. **Hero Section**: Full-height banner with elegant typography
-3. **Booking Form**: Step-by-step process with numbered sections
-4. **Features Section**: Highlights why to choose WeddingClikzzz
-5. **Premium Footer**: Multi-column layout with company information
+1. **Sticky Navigation**: Clean white with subtle shadow
+2. **Hero Section**: Dark full-height banner with elegant typography
+3. **Booking Form**: Step-by-step process with clean numbered sections
+4. **Features Section**: Card-based layout on cream background
+5. **Footer**: Dark professional footer with company information
 
 ## Installation & Setup
 
