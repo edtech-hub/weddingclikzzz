@@ -3,256 +3,2355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeddingClikzzz - Premium Wedding Photography & Cinematography</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Google Fonts for elegant typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-    <!-- jsPDF Library for PDF generation -->
+    <title>WeddingClickz - Book Your Wedding Photography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- EmailJS for email delivery -->
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            --gold: #C9A87C;
+            --gold-light: #E8D5B7;
+            --gold-dark: #8B7355;
+            --cream: #FAF7F2;
+            --charcoal: #2C2C2C;
+            --charcoal-light: #3D3D3D;
+            --white: #FFFFFF;
+            --text-dark: #1A1A1A;
+            --text-light: #6B6B6B;
+            --success: #4CAF50;
+            --error: #E53935;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(44, 44, 44, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: var(--white);
+            letter-spacing: 0.05em;
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--white);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--gold);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--charcoal) 0%, var(--charcoal-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A87C' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(201, 168, 124, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            border-radius: 50px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(201, 168, 124, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(201, 168, 124, 0.4);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            stroke: var(--gold);
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Step Indicator */
+        .steps-container {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: calc(50% + 30px);
+            width: calc(100% - 60px);
+            height: 2px;
+            background: var(--gold-light);
+        }
+
+        .step-item.active:not(:last-child)::after,
+        .step-item.completed:not(:last-child)::after {
+            background: var(--gold);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white);
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .step-item.active .step-number,
+        .step-item.completed .step-number {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--white);
+        }
+
+        .step-label {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: var(--gold-dark);
+            font-weight: 600;
+        }
+
+        /* Booking Form Container */
+        .booking-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .form-section {
+            padding: 3rem;
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            position: relative;
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .event-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.1), rgba(201, 168, 124, 0.05));
+        }
+
+        .event-card input {
+            display: none;
+        }
+
+        .event-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+        }
+
+        .event-card h3 {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .event-check {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .event-card.selected .event-check {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .event-check svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--white);
+            stroke-width: 3;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-card.selected .event-check svg {
+            opacity: 1;
+        }
+
+        /* Services Section */
+        .services-wrapper {
+            display: none;
+        }
+
+        .services-wrapper.active {
+            display: block;
+        }
+
+        .event-services-block {
+            background: var(--cream);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .event-services-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.3);
+        }
+
+        .event-services-header h3 {
+            font-size: 1.5rem;
+            color: var(--charcoal);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--white);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .service-item:hover {
+            border-color: var(--gold-light);
+        }
+
+        .service-item.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 168, 124, 0.1), rgba(201, 168, 124, 0.05));
+        }
+
+        .service-item input {
+            display: none;
+        }
+
+        .service-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .service-item.selected .service-checkbox {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .service-checkbox svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--white);
+            stroke-width: 3;
+            opacity: 0;
+        }
+
+        .service-item.selected .service-checkbox svg {
+            opacity: 1;
+        }
+
+        .service-info {
+            flex: 1;
+        }
+
+        .service-info h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-info p {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .service-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+        }
+
+        /* Price Summary */
+        .price-summary {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            border-radius: 16px;
+            padding: 2rem;
+            color: var(--white);
+            position: sticky;
+            top: 120px;
+        }
+
+        .price-summary h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .price-item-name {
+            font-size: 0.9rem;
+            color: var(--gold-light);
+        }
+
+        .price-item-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        .price-total-label {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .price-total-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        /* Customer Details Form */
+        .details-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            letter-spacing: 0.05em;
+        }
+
+        .form-group label span {
+            color: var(--error);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--gold-light);
+            border-radius: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--cream);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: var(--white);
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: var(--error);
+            background: #FFF5F5;
+        }
+
+        .form-group input.error:focus,
+        .form-group textarea.error:focus {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.1);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .error-message svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            box-shadow: 0 10px 30px rgba(201, 168, 124, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(201, 168, 124, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--charcoal);
+            border: 2px solid var(--gold-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            background: rgba(201, 168, 124, 0.1);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Invoice Preview */
+        .invoice-preview {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .invoice-header {
+            background: linear-gradient(135deg, var(--charcoal), var(--charcoal-light));
+            padding: 3rem;
+            color: var(--white);
+        }
+
+        .invoice-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+
+        .invoice-logo h2 {
+            font-size: 2rem;
+            color: var(--white);
+        }
+
+        .invoice-logo h2 span {
+            color: var(--gold);
+        }
+
+        .invoice-badge {
+            padding: 0.5rem 1.5rem;
+            background: var(--gold);
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            border-radius: 50px;
+        }
+
+        .invoice-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .invoice-meta-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .invoice-meta-item span {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .invoice-body {
+            padding: 3rem;
+        }
+
+        .invoice-parties {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .invoice-party h4 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .invoice-party p {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        .invoice-party strong {
+            font-size: 1.1rem;
+            color: var(--charcoal);
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .invoice-table thead {
+            background: var(--cream);
+        }
+
+        .invoice-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .invoice-table th:last-child {
+            text-align: right;
+        }
+
+        .invoice-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .invoice-table td:last-child {
+            text-align: right;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .invoice-table .event-name {
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .invoice-table .service-name {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            padding-left: 1.5rem;
+        }
+
+        .invoice-totals {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .invoice-totals-box {
+            width: 300px;
+        }
+
+        .invoice-totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(201, 168, 124, 0.2);
+        }
+
+        .invoice-totals-row span {
+            font-size: 0.95rem;
+        }
+
+        .invoice-totals-row.total {
+            border-bottom: none;
+            padding-top: 1rem;
+            border-top: 2px solid var(--gold);
+        }
+
+        .invoice-totals-row.total span {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .invoice-totals-row.total span:last-child {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.75rem;
+            color: var(--gold-dark);
+        }
+
+        .invoice-footer {
+            background: var(--cream);
+            padding: 2rem 3rem;
+        }
+
+        .invoice-footer h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .invoice-footer ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        .invoice-footer ul li::before {
+            content: '•';
+            color: var(--gold);
+            margin-right: 0.5rem;
+        }
+
+        /* Success Message */
+        .success-container {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--success), #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .success-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: var(--white);
+            stroke-width: 3;
+        }
+
+        .success-container h2 {
+            font-size: 2.5rem;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .success-container p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--white);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Two Column Layout for Review */
+        .review-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--error);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: var(--white);
+            padding: 4rem 2rem 2rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand h3 span {
+            color: var(--gold);
+        }
+
+        .footer-brand p {
+            color: var(--gold-light);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .footer-links h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--gold-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--gold-light);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .review-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .price-summary {
+                position: static;
+            }
+
+            .invoice-meta {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 1rem;
+            }
+
+            nav ul {
+                display: none;
+            }
+
+            .steps-container {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .step-item:not(:last-child)::after {
+                display: none;
+            }
+
+            .details-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .invoice-header-top {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .invoice-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-parties {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
             <div class="logo">
-                <span class="logo-ornament">❖</span>
-                <span class="logo-text">WeddingClikzzz</span>
-                <span class="logo-ornament">❖</span>
+                <div class="logo-icon">W</div>
+                <div class="logo-text">Wedding<span>Clickz</span></div>
             </div>
-            <div class="nav-contact">
-                <span class="contact-item">📞 +91 98765 43210</span>
-                <span class="contact-divider">|</span>
-                <span class="contact-item">✉ info@weddingclikzzz.com</span>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="https://www.weddingclickz.com/">Home</a></li>
+                    <li><a href="https://www.weddingclickz.com/about-us/">About</a></li>
+                    <li><a href="https://www.weddingclickz.com/portfolio/">Portfolio</a></li>
+                    <li><a href="https://www.weddingclickz.com/contact-us/">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-overlay"></div>
+    <section class="hero">
         <div class="hero-content">
-            <div class="ornamental-line top"></div>
-            <h1 class="hero-title">Capturing Eternal Love</h1>
-            <p class="hero-subtitle">Premium Indian Wedding Photography & Cinematography</p>
-            <div class="ornamental-line bottom"></div>
-            <p class="hero-description">
-                Every love story is beautiful, but yours is our favorite to tell
-            </p>
-            <a href="#booking" class="hero-cta smooth-scroll">Begin Your Journey</a>
+            <div class="hero-badge">Premium Wedding Photography</div>
+            <h1>Book Your <span>Perfect</span><br>Wedding Coverage</h1>
+            <p>Select your events, choose your services, and receive a professional invoice instantly. Let us capture every precious moment of your special day.</p>
+            <a href="#booking" class="hero-cta">
+                Start Booking
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
         </div>
-        <div class="hero-pattern-left"></div>
-        <div class="hero-pattern-right"></div>
-    </section>
-
-    <div class="container" id="booking">
-
-        <!-- Main Form -->
-        <div class="booking-form">
-            <div class="section-header">
-                <div class="section-ornament">✦</div>
-                <h2>Book Your Wedding Photography Services</h2>
-                <div class="section-ornament">✦</div>
-            </div>
-            <p class="section-intro">Select your events and services to receive a personalized quotation</p>
-
-            <!-- Step 1: Event Selection -->
-            <section class="form-section">
-                <div class="step-header">
-                    <span class="step-number">01</span>
-                    <h3>Select Wedding Events</h3>
-                </div>
-                <div class="event-selection">
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Reception" data-event="Reception">
-                        <span>Reception</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Haldi" data-event="Haldi">
-                        <span>Haldi</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Marriage" data-event="Marriage">
-                        <span>Marriage</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Engagement" data-event="Engagement">
-                        <span>Engagement</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Mehendi" data-event="Mehendi">
-                        <span>Mehendi</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Sangeet" data-event="Sangeet">
-                        <span>Sangeet</span>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Step 2: Service Selection (Dynamic) -->
-            <section class="form-section" id="serviceSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">02</span>
-                    <h3>Select Services for Each Event</h3>
-                </div>
-                <div id="serviceSelectionContainer"></div>
-            </section>
-
-            <!-- Step 3: Pricing Summary -->
-            <section class="form-section" id="pricingSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">03</span>
-                    <h3>Pricing Summary</h3>
-                </div>
-                <div class="pricing-summary">
-                    <div id="itemizedList"></div>
-                    <div class="pricing-totals">
-                        <div class="pricing-row">
-                            <span>Subtotal:</span>
-                            <span id="subtotal">₹0</span>
-                        </div>
-                        <div class="pricing-row">
-                            <span>GST (18%):</span>
-                            <span id="tax">₹0</span>
-                        </div>
-                        <div class="pricing-row total">
-                            <span>Total Amount:</span>
-                            <span id="total">₹0</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Step 4: Customer Details -->
-            <section class="form-section" id="detailsSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">04</span>
-                    <h3>Enter Your Details</h3>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="clientName">Full Name *</label>
-                        <input type="text" id="clientName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="clientEmail">Email Address *</label>
-                        <input type="email" id="clientEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="clientPhone">Phone Number *</label>
-                        <input type="tel" id="clientPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="weddingDate">Wedding Date *</label>
-                        <input type="date" id="weddingDate" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="clientAddress">Address</label>
-                        <textarea id="clientAddress" rows="3"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="specialRequests">Special Requests / Notes</label>
-                        <textarea id="specialRequests" rows="3"></textarea>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button type="button" id="calculateBtn" class="btn btn-secondary" style="display: none;">
-                    Calculate Price
-                </button>
-                <button type="button" id="generateInvoiceBtn" class="btn btn-primary" style="display: none;">
-                    Generate Invoice & Send Email
-                </button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="features-container">
-            <div class="section-header">
-                <div class="section-ornament">✦</div>
-                <h2>Why Choose WeddingClikzzz</h2>
-                <div class="section-ornament">✦</div>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📸</div>
-                    <h4>Professional Excellence</h4>
-                    <p>Award-winning photographers with 10+ years of experience in capturing Indian weddings</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎥</div>
-                    <h4>Cinematic Videography</h4>
-                    <p>State-of-the-art equipment and cinematic techniques for stunning wedding films</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">✨</div>
-                    <h4>Customized Packages</h4>
-                    <p>Flexible packages tailored to your specific requirements and budget</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💝</div>
-                    <h4>Personalized Service</h4>
-                    <p>Dedicated team ensuring every precious moment is beautifully captured</p>
-                </div>
-            </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
         </div>
     </section>
+
+    <!-- Main Booking Section -->
+    <main id="booking">
+        <section>
+            <div class="section-header">
+                <span class="section-label">Simple Booking Process</span>
+                <h2 class="section-title">Create Your Package</h2>
+                <p class="section-subtitle">Follow the steps below to customize your wedding photography package and receive an instant quote.</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="steps-container">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Select Events</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Choose Services</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Your Details</div>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review & Confirm</div>
+                </div>
+            </div>
+
+            <!-- Booking Container -->
+            <div class="booking-container">
+                <!-- Step 1: Event Selection -->
+                <div class="form-section active" id="step1">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Your Wedding Events</h3>
+                        <p class="section-subtitle">Choose one or more events you'd like us to cover.</p>
+                    </div>
+                    
+                    <div class="events-grid">
+                        <div class="event-card" data-event="reception">
+                            <input type="checkbox" name="event" value="reception">
+                            <div class="event-icon">💒</div>
+                            <h3>Reception</h3>
+                            <p>Grand celebration with family & friends</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="haldi">
+                            <input type="checkbox" name="event" value="haldi">
+                            <div class="event-icon">🌻</div>
+                            <h3>Haldi</h3>
+                            <p>Traditional turmeric ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="marriage">
+                            <input type="checkbox" name="event" value="marriage">
+                            <div class="event-icon">💍</div>
+                            <h3>Marriage</h3>
+                            <p>Sacred wedding ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="engagement">
+                            <input type="checkbox" name="event" value="engagement">
+                            <div class="event-icon">💎</div>
+                            <h3>Engagement</h3>
+                            <p>Ring ceremony celebration</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="mehendi">
+                            <input type="checkbox" name="event" value="mehendi">
+                            <div class="event-icon">✋</div>
+                            <h3>Mehendi</h3>
+                            <p>Beautiful henna ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="sangeet">
+                            <input type="checkbox" name="event" value="sangeet">
+                            <div class="event-icon">🎵</div>
+                            <h3>Sangeet</h3>
+                            <p>Musical night celebration</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="prewedding">
+                            <input type="checkbox" name="event" value="prewedding">
+                            <div class="event-icon">📸</div>
+                            <h3>Pre-Wedding Shoot</h3>
+                            <p>Romantic couple photoshoot</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="other">
+                            <input type="checkbox" name="event" value="other">
+                            <div class="event-icon">✨</div>
+                            <h3>Other Event</h3>
+                            <p>Custom event coverage</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <div></div>
+                        <button class="btn btn-primary" id="toStep2" disabled>
+                            Continue to Services
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Service Selection -->
+                <div class="form-section" id="step2">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Services for Each Event</h3>
+                        <p class="section-subtitle">Choose the photography and videography services you need for each event.</p>
+                    </div>
+                    
+                    <div id="servicesContainer">
+                        <!-- Dynamic services will be inserted here -->
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Events
+                        </button>
+                        <button class="btn btn-primary" id="toStep3" disabled>
+                            Continue to Details
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customer Details -->
+                <div class="form-section" id="step3">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Your Details</h3>
+                        <p class="section-subtitle">Please provide your contact information for the invoice.</p>
+                    </div>
+                    
+                    <div class="details-form">
+                        <div class="form-group">
+                            <label>Full Name <span>*</span></label>
+                            <input type="text" id="clientName" placeholder="Enter your full name" required>
+                            <div class="error-message" id="clientNameError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter your full name</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Partner's Name</label>
+                            <input type="text" id="partnerName" placeholder="Enter partner's name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address <span>*</span></label>
+                            <input type="email" id="clientEmail" placeholder="your@email.com" required>
+                            <div class="error-message" id="clientEmailError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter a valid email address</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span>*</span></label>
+                            <input type="tel" id="clientPhone" placeholder="+91 98765 43210" required>
+                            <div class="error-message" id="clientPhoneError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter your phone number</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Wedding Date <span>*</span></label>
+                            <input type="date" id="weddingDate" required>
+                            <div class="error-message" id="weddingDateError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please select your wedding date</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Wedding Venue</label>
+                            <input type="text" id="weddingVenue" placeholder="Enter venue name & city">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Address</label>
+                            <textarea id="clientAddress" placeholder="Enter your complete address"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Additional Notes</label>
+                            <textarea id="additionalNotes" placeholder="Any special requirements or requests..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Services
+                        </button>
+                        <button class="btn btn-primary" id="toStep4">
+                            Review & Generate Invoice
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review & Invoice -->
+                <div class="form-section" id="step4">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Review Your Booking</h3>
+                        <p class="section-subtitle">Please review your selections and confirm to generate the invoice.</p>
+                    </div>
+
+                    <div class="review-layout">
+                        <div class="invoice-preview" id="invoicePreview">
+                            <!-- Invoice preview will be generated here -->
+                        </div>
+                        <div class="price-summary" id="priceSummaryFinal">
+                            <!-- Price summary will be generated here -->
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Details
+                        </button>
+                        <button class="btn btn-primary" id="generateInvoice">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Download Invoice PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="form-section" id="successStep">
+                    <div class="success-container">
+                        <div class="success-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h2>Booking Confirmed!</h2>
+                        <p>Your invoice has been generated and downloaded. We've also sent a copy to your email.</p>
+                        <button class="btn btn-primary" id="startOver">
+                            Start New Booking
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="footer-content">
-            <div class="footer-section">
-                <div class="footer-logo">
-                    <span class="logo-ornament">❖</span>
-                    <span class="logo-text">WeddingClikzzz</span>
-                    <span class="logo-ornament">❖</span>
-                </div>
-                <p class="footer-tagline">Capturing Your Beautiful Moments</p>
+            <div class="footer-brand">
+                <h3>Wedding<span>Clickz</span></h3>
+                <p>At WeddingClickz Photography, we believe that every wedding is a story waiting to be told—authentically, artistically, and with heart.</p>
             </div>
-            <div class="footer-section">
-                <h4>Contact Us</h4>
-                <p>📞 +91 98765 43210</p>
-                <p>✉ info@weddingclikzzz.com</p>
-                <p>📍 Mumbai | Delhi | Bangalore | Jaipur</p>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="https://www.weddingclickz.com/">Home</a></li>
+                    <li><a href="https://www.weddingclickz.com/about-us/">About Us</a></li>
+                    <li><a href="https://www.weddingclickz.com/portfolio/">Portfolio</a></li>
+                    <li><a href="https://www.weddingclickz.com/galleries/">Gallery</a></li>
+                </ul>
             </div>
-            <div class="footer-section">
-                <h4>Services</h4>
-                <p>Wedding Photography</p>
-                <p>Cinematic Videography</p>
-                <p>Pre-Wedding Shoots</p>
-                <p>Destination Weddings</p>
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="tel:+919740222927">+91 97402 22927</a></li>
+                    <li><a href="mailto:info@weddingclickz.com">info@weddingclickz.com</a></li>
+                    <li><a href="#">Jayanagar, Bengaluru</a></li>
+                </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 WeddingClikzzz. All rights reserved.</p>
-            <p>Crafted with ❤️ for creating timeless memories</p>
+            <p>&copy; 2025 WeddingClickz Photography. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="spinner"></div>
-        <p>Generating invoice and sending email...</p>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
     </div>
 
-    <!-- Success Modal -->
-    <div id="successModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h3>Success!</h3>
-            <p>Your invoice has been generated and sent to your email.</p>
-            <button class="btn btn-primary" onclick="closeModal()">Close</button>
-        </div>
-    </div>
+    <script>
+        // Service Pricing Data
+        const servicePricing = {
+            cinematography: { name: 'Cinematography', description: 'Full cinematic wedding film', price: 35000 },
+            droneShoot: { name: 'Drone Shoot', description: 'Aerial photography & video', price: 15000 },
+            candidPhotography: { name: 'Candid Photography', description: 'Natural, unposed moments', price: 25000 },
+            traditionalPhotography: { name: 'Traditional Photography', description: 'Classic wedding shots', price: 18000 },
+            traditionalVideography: { name: 'Traditional Videography', description: 'Complete event recording', price: 20000 },
+            photoAlbum: { name: 'Premium Photo Album', description: '40-page premium album', price: 12000 }
+        };
 
-    <script src="script.js"></script>
+        const eventNames = {
+            reception: 'Reception',
+            haldi: 'Haldi',
+            marriage: 'Marriage',
+            engagement: 'Engagement',
+            mehendi: 'Mehendi',
+            sangeet: 'Sangeet',
+            prewedding: 'Pre-Wedding Shoot',
+            other: 'Other Event'
+        };
+
+        // State Management
+        let selectedEvents = [];
+        let selectedServices = {};
+        let customerDetails = {};
+
+        // DOM Elements
+        const eventCards = document.querySelectorAll('.event-card');
+        const stepItems = document.querySelectorAll('.step-item');
+        const formSections = document.querySelectorAll('.form-section');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initEventHandlers();
+            initNavigationHandlers();
+            initScrollEffects();
+            setMinWeddingDate();
+        });
+
+        function setMinWeddingDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('weddingDate').setAttribute('min', today);
+        }
+
+        // Event Selection Handlers
+        function initEventHandlers() {
+            eventCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    card.classList.toggle('selected');
+                    const checkbox = card.querySelector('input');
+                    checkbox.checked = card.classList.contains('selected');
+                    updateSelectedEvents();
+                });
+            });
+        }
+
+        function updateSelectedEvents() {
+            selectedEvents = Array.from(document.querySelectorAll('.event-card.selected'))
+                .map(card => card.dataset.event);
+            
+            document.getElementById('toStep2').disabled = selectedEvents.length === 0;
+        }
+
+        // Navigation Handlers
+        function initNavigationHandlers() {
+            // Step 1 to 2
+            document.getElementById('toStep2').addEventListener('click', () => {
+                generateServicesForEvents();
+                goToStep(2);
+            });
+
+            // Step 2 to 1
+            document.getElementById('backToStep1').addEventListener('click', () => goToStep(1));
+
+            // Step 2 to 3
+            document.getElementById('toStep3').addEventListener('click', () => goToStep(3));
+
+            // Step 3 to 2
+            document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
+
+            // Step 3 to 4
+            document.getElementById('toStep4').addEventListener('click', () => {
+                if (validateCustomerDetails()) {
+                    generateInvoicePreview();
+                    goToStep(4);
+                }
+            });
+
+            // Step 4 to 3
+            document.getElementById('backToStep3').addEventListener('click', () => goToStep(3));
+
+            // Generate Invoice
+            document.getElementById('generateInvoice').addEventListener('click', generatePDF);
+
+            // Start Over
+            document.getElementById('startOver').addEventListener('click', resetForm);
+        }
+
+        function goToStep(step) {
+            // Update step indicators
+            stepItems.forEach((item, index) => {
+                item.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    item.classList.add('completed');
+                } else if (index + 1 === step) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update form sections
+            formSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+
+            // Scroll to top of form
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Generate Services for Selected Events
+        function generateServicesForEvents() {
+            const container = document.getElementById('servicesContainer');
+            container.innerHTML = '';
+
+            selectedEvents.forEach(event => {
+                if (!selectedServices[event]) {
+                    selectedServices[event] = [];
+                }
+
+                const eventBlock = document.createElement('div');
+                eventBlock.className = 'event-services-block';
+                eventBlock.innerHTML = `
+                    <div class="event-services-header">
+                        <h3>${eventNames[event]}</h3>
+                    </div>
+                    <div class="services-grid" data-event="${event}">
+                        ${Object.entries(servicePricing).map(([key, service]) => `
+                            <div class="service-item ${selectedServices[event].includes(key) ? 'selected' : ''}" data-service="${key}">
+                                <input type="checkbox" ${selectedServices[event].includes(key) ? 'checked' : ''}>
+                                <div class="service-checkbox">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                </div>
+                                <div class="service-info">
+                                    <h4>${service.name}</h4>
+                                    <p>${service.description}</p>
+                                </div>
+                                <div class="service-price">₹${service.price.toLocaleString('en-IN')}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(eventBlock);
+            });
+
+            // Add event listeners to service items
+            document.querySelectorAll('.service-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const event = item.closest('.services-grid').dataset.event;
+                    const service = item.dataset.service;
+                    
+                    item.classList.toggle('selected');
+                    const checkbox = item.querySelector('input');
+                    checkbox.checked = item.classList.contains('selected');
+
+                    if (item.classList.contains('selected')) {
+                        if (!selectedServices[event].includes(service)) {
+                            selectedServices[event].push(service);
+                        }
+                    } else {
+                        selectedServices[event] = selectedServices[event].filter(s => s !== service);
+                    }
+
+                    updateStep3Button();
+                });
+            });
+
+            updateStep3Button();
+        }
+
+        function updateStep3Button() {
+            const hasServices = Object.values(selectedServices).some(services => services.length > 0);
+            document.getElementById('toStep3').disabled = !hasServices;
+        }
+
+        // Validate Customer Details
+        function validateCustomerDetails() {
+            let isValid = true;
+            
+            // Clear all previous errors
+            clearAllErrors();
+            
+            const name = document.getElementById('clientName').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+            const weddingDate = document.getElementById('weddingDate').value;
+
+            if (!name) {
+                showFieldError('clientName', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            if (!email) {
+                showFieldError('clientEmail', 'Please enter your email address');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showFieldError('clientEmail', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!phone) {
+                showFieldError('clientPhone', 'Please enter your phone number');
+                isValid = false;
+            }
+            
+            if (!weddingDate) {
+                showFieldError('weddingDate', 'Please select your wedding date');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                // Scroll to the first error
+                const firstError = document.querySelector('.form-group input.error');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstError.focus();
+                }
+                return false;
+            }
+
+            customerDetails = {
+                name,
+                partnerName: document.getElementById('partnerName').value.trim(),
+                email,
+                phone,
+                weddingDate,
+                venue: document.getElementById('weddingVenue').value.trim(),
+                address: document.getElementById('clientAddress').value.trim(),
+                notes: document.getElementById('additionalNotes').value.trim()
+            };
+
+            return true;
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + 'Error');
+            
+            field.classList.add('error');
+            if (errorElement) {
+                errorElement.querySelector('span').textContent = message;
+                errorElement.classList.add('show');
+            }
+            
+            // Remove error on input
+            field.addEventListener('input', function removeError() {
+                field.classList.remove('error');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+                field.removeEventListener('input', removeError);
+            }, { once: true });
+        }
+
+        function clearAllErrors() {
+            const errorFields = document.querySelectorAll('.form-group input.error, .form-group textarea.error');
+            errorFields.forEach(field => field.classList.remove('error'));
+            
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.classList.remove('show'));
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Calculate Totals
+        function calculateTotals() {
+            let subtotal = 0;
+            const items = [];
+
+            selectedEvents.forEach(event => {
+                const eventServices = selectedServices[event] || [];
+                eventServices.forEach(serviceKey => {
+                    const service = servicePricing[serviceKey];
+                    subtotal += service.price;
+                    items.push({
+                        event: eventNames[event],
+                        service: service.name,
+                        price: service.price
+                    });
+                });
+            });
+
+            const tax = Math.round(subtotal * 0.18); // 18% GST
+            const total = subtotal + tax;
+
+            return { subtotal, tax, total, items };
+        }
+
+        // Generate Invoice Preview
+        function generateInvoicePreview() {
+            const { subtotal, tax, total, items } = calculateTotals();
+            const invoiceNumber = 'WC-' + Date.now().toString().slice(-8);
+            const today = new Date().toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            const weddingDateFormatted = new Date(customerDetails.weddingDate).toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+
+            // Group items by event
+            const groupedItems = {};
+            items.forEach(item => {
+                if (!groupedItems[item.event]) {
+                    groupedItems[item.event] = [];
+                }
+                groupedItems[item.event].push(item);
+            });
+
+            const invoicePreview = document.getElementById('invoicePreview');
+            invoicePreview.innerHTML = `
+                <div class="invoice-header">
+                    <div class="invoice-header-top">
+                        <div class="invoice-logo">
+                            <h2>Wedding<span>Clickz</span></h2>
+                        </div>
+                        <div class="invoice-badge">QUOTATION</div>
+                    </div>
+                    <div class="invoice-meta">
+                        <div class="invoice-meta-item">
+                            <label>Invoice Number</label>
+                            <span>${invoiceNumber}</span>
+                        </div>
+                        <div class="invoice-meta-item">
+                            <label>Invoice Date</label>
+                            <span>${today}</span>
+                        </div>
+                        <div class="invoice-meta-item">
+                            <label>Wedding Date</label>
+                            <span>${weddingDateFormatted}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice-body">
+                    <div class="invoice-parties">
+                        <div class="invoice-party">
+                            <h4>From</h4>
+                            <p>
+                                <strong>WeddingClickz Photography</strong><br>
+                                2nd floor, 47th Cross Rd, 5th Block,<br>
+                                TMC Layout, 1st Phase, Jayanagar,<br>
+                                Bengaluru, Karnataka 560041<br>
+                                Phone: +91 97402 22927
+                            </p>
+                        </div>
+                        <div class="invoice-party">
+                            <h4>To</h4>
+                            <p>
+                                <strong>${customerDetails.name}${customerDetails.partnerName ? ' & ' + customerDetails.partnerName : ''}</strong><br>
+                                ${customerDetails.address ? customerDetails.address + '<br>' : ''}
+                                Email: ${customerDetails.email}<br>
+                                Phone: ${customerDetails.phone}
+                                ${customerDetails.venue ? '<br>Venue: ' + customerDetails.venue : ''}
+                            </p>
+                        </div>
+                    </div>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${Object.entries(groupedItems).map(([event, services]) => `
+                                <tr>
+                                    <td class="event-name">${event}</td>
+                                    <td></td>
+                                </tr>
+                                ${services.map(service => `
+                                    <tr>
+                                        <td class="service-name">↳ ${service.service}</td>
+                                        <td>₹${service.price.toLocaleString('en-IN')}</td>
+                                    </tr>
+                                `).join('')}
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div class="invoice-totals">
+                        <div class="invoice-totals-box">
+                            <div class="invoice-totals-row">
+                                <span>Subtotal</span>
+                                <span>₹${subtotal.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div class="invoice-totals-row">
+                                <span>GST (18%)</span>
+                                <span>₹${tax.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div class="invoice-totals-row total">
+                                <span>Total</span>
+                                <span>₹${total.toLocaleString('en-IN')}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="invoice-footer">
+                    <h4>Terms & Conditions</h4>
+                    <ul>
+                        <li>50% advance payment required to confirm booking</li>
+                        <li>Remaining balance due 7 days before the event</li>
+                        <li>All edited photos delivered within 10 working days</li>
+                        <li>Cinematic films delivered within 2-4 weeks</li>
+                        <li>Travel and accommodation charges extra for outstation events</li>
+                    </ul>
+                </div>
+            `;
+
+            // Update price summary
+            const priceSummary = document.getElementById('priceSummaryFinal');
+            priceSummary.innerHTML = `
+                <h3>Price Summary</h3>
+                <div class="price-items">
+                    ${Object.entries(groupedItems).map(([event, services]) => `
+                        <div class="price-item">
+                            <span class="price-item-name">${event}</span>
+                            <span class="price-item-value">₹${services.reduce((sum, s) => sum + s.price, 0).toLocaleString('en-IN')}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="price-item">
+                    <span class="price-item-name">Subtotal</span>
+                    <span class="price-item-value">₹${subtotal.toLocaleString('en-IN')}</span>
+                </div>
+                <div class="price-item">
+                    <span class="price-item-name">GST (18%)</span>
+                    <span class="price-item-value">₹${tax.toLocaleString('en-IN')}</span>
+                </div>
+                <div class="price-total">
+                    <span class="price-total-label">Total</span>
+                    <span class="price-total-value">₹${total.toLocaleString('en-IN')}</span>
+                </div>
+            `;
+        }
+
+        // Generate PDF Invoice
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 20;
+            let y = 0;
+
+            const { subtotal, tax, total, items } = calculateTotals();
+            const invoiceNumber = 'WC-' + Date.now().toString().slice(-8);
+            const today = new Date().toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            const weddingDateFormatted = new Date(customerDetails.weddingDate).toLocaleDateString('en-IN', { 
+                day: '2-digit', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+
+            // Header Background
+            doc.setFillColor(44, 44, 44);
+            doc.rect(0, 0, pageWidth, 55, 'F');
+
+            // Logo Text
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Wedding', margin, 25);
+            doc.setTextColor(201, 168, 124);
+            doc.text('Clickz', margin + 38, 25);
+
+            // Quotation Badge
+            doc.setFillColor(201, 168, 124);
+            doc.roundedRect(pageWidth - margin - 35, 15, 35, 10, 2, 2, 'F');
+            doc.setTextColor(44, 44, 44);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('QUOTATION', pageWidth - margin - 32, 22);
+
+            // Invoice Meta
+            doc.setTextColor(232, 213, 183);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            
+            doc.text('INVOICE NUMBER', margin, 40);
+            doc.text('INVOICE DATE', pageWidth/2 - 15, 40);
+            doc.text('WEDDING DATE', pageWidth - margin - 25, 40);
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.text(invoiceNumber, margin, 47);
+            doc.text(today, pageWidth/2 - 15, 47);
+            doc.text(weddingDateFormatted, pageWidth - margin - 25, 47);
+
+            y = 70;
+
+            // From / To Section
+            doc.setTextColor(201, 168, 124);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('FROM', margin, y);
+            doc.text('TO', pageWidth/2 + 10, y);
+
+            y += 6;
+            doc.setTextColor(26, 26, 26);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.text('WeddingClickz Photography', margin, y);
+            doc.text(customerDetails.name + (customerDetails.partnerName ? ' & ' + customerDetails.partnerName : ''), pageWidth/2 + 10, y);
+
+            y += 5;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(107, 107, 107);
+
+            const fromLines = [
+                '2nd floor, 47th Cross Rd, 5th Block,',
+                'TMC Layout, 1st Phase, Jayanagar,',
+                'Bengaluru, Karnataka 560041',
+                'Phone: +91 97402 22927'
+            ];
+
+            const toLines = [];
+            if (customerDetails.address) toLines.push(customerDetails.address);
+            toLines.push('Email: ' + customerDetails.email);
+            toLines.push('Phone: ' + customerDetails.phone);
+            if (customerDetails.venue) toLines.push('Venue: ' + customerDetails.venue);
+
+            fromLines.forEach((line, i) => {
+                doc.text(line, margin, y + (i * 5));
+            });
+
+            toLines.forEach((line, i) => {
+                const displayLine = line.length > 40 ? line.substring(0, 40) + '...' : line;
+                doc.text(displayLine, pageWidth/2 + 10, y + (i * 5));
+            });
+
+            y += Math.max(fromLines.length, toLines.length) * 5 + 10;
+
+            // Table Header
+            doc.setFillColor(250, 247, 242);
+            doc.rect(margin, y, pageWidth - (margin * 2), 10, 'F');
+            
+            doc.setTextColor(139, 115, 85);
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'bold');
+            doc.text('DESCRIPTION', margin + 5, y + 7);
+            doc.text('AMOUNT', pageWidth - margin - 25, y + 7);
+
+            y += 15;
+
+            // Group items by event
+            const groupedItems = {};
+            items.forEach(item => {
+                if (!groupedItems[item.event]) {
+                    groupedItems[item.event] = [];
+                }
+                groupedItems[item.event].push(item);
+            });
+
+            // Table Content
+            doc.setFontSize(10);
+            Object.entries(groupedItems).forEach(([event, services]) => {
+                // Event name
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(44, 44, 44);
+                doc.text(event, margin + 5, y);
+                y += 6;
+
+                // Services
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(107, 107, 107);
+                services.forEach(service => {
+                    doc.text('↳ ' + service.service, margin + 10, y);
+                    doc.setTextColor(44, 44, 44);
+                    doc.text('₹' + service.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+                    doc.setTextColor(107, 107, 107);
+                    
+                    // Separator line
+                    doc.setDrawColor(232, 213, 183);
+                    doc.setLineWidth(0.1);
+                    doc.line(margin, y + 3, pageWidth - margin, y + 3);
+                    y += 8;
+                });
+
+                y += 3;
+            });
+
+            y += 5;
+
+            // Totals
+            const totalsX = pageWidth - margin - 70;
+            
+            doc.setTextColor(107, 107, 107);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Subtotal', totalsX, y);
+            doc.setTextColor(44, 44, 44);
+            doc.text('₹' + subtotal.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+            
+            y += 7;
+            doc.setTextColor(107, 107, 107);
+            doc.text('GST (18%)', totalsX, y);
+            doc.setTextColor(44, 44, 44);
+            doc.text('₹' + tax.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+            
+            y += 3;
+            doc.setDrawColor(201, 168, 124);
+            doc.setLineWidth(0.5);
+            doc.line(totalsX, y, pageWidth - margin, y);
+            
+            y += 8;
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('TOTAL', totalsX, y);
+            doc.setTextColor(139, 115, 85);
+            doc.setFontSize(14);
+            doc.text('₹' + total.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+
+            // Terms & Conditions
+            y += 20;
+            doc.setFillColor(250, 247, 242);
+            doc.rect(margin, y, pageWidth - (margin * 2), 45, 'F');
+            
+            y += 8;
+            doc.setTextColor(44, 44, 44);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Terms & Conditions', margin + 5, y);
+            
+            y += 6;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(107, 107, 107);
+            
+            const terms = [
+                '• 50% advance payment required to confirm booking',
+                '• Remaining balance due 7 days before the event',
+                '• All edited photos delivered within 10 working days',
+                '• Cinematic films delivered within 2-4 weeks',
+                '• Travel and accommodation charges extra for outstation events'
+            ];
+            
+            terms.forEach((term, i) => {
+                doc.text(term, margin + 5, y + (i * 5));
+            });
+
+            // Footer
+            doc.setTextColor(201, 168, 124);
+            doc.setFontSize(8);
+            doc.text('Thank you for choosing WeddingClickz!', pageWidth/2, pageHeight - 15, { align: 'center' });
+
+            // Save PDF
+            const fileName = `WeddingClickz_Invoice_${invoiceNumber}.pdf`;
+            doc.save(fileName);
+
+            showToast('Invoice downloaded successfully!', 'success');
+            
+            // Show success step
+            formSections.forEach(section => section.classList.remove('active'));
+            document.getElementById('successStep').classList.add('active');
+        }
+
+        // Reset Form
+        function resetForm() {
+            selectedEvents = [];
+            selectedServices = {};
+            customerDetails = {};
+
+            // Reset event cards
+            eventCards.forEach(card => {
+                card.classList.remove('selected');
+                card.querySelector('input').checked = false;
+            });
+
+            // Reset form fields
+            document.getElementById('clientName').value = '';
+            document.getElementById('partnerName').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientPhone').value = '';
+            document.getElementById('weddingDate').value = '';
+            document.getElementById('weddingVenue').value = '';
+            document.getElementById('clientAddress').value = '';
+            document.getElementById('additionalNotes').value = '';
+
+            // Reset buttons
+            document.getElementById('toStep2').disabled = true;
+            document.getElementById('toStep3').disabled = true;
+
+            // Go to step 1
+            goToStep(1);
+        }
+
+        // Scroll Effects
+        function initScrollEffects() {
+            const header = document.getElementById('header');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toast.className = 'toast ' + type;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
