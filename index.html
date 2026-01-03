@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Photography Booking | WeddingClikzzz</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- jsPDF Library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- EmailJS for email delivery -->
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <h1>WeddingClikzzz</h1>
+                <p class="tagline">Capturing Your Beautiful Moments</p>
+            </div>
+        </header>
+
+        <!-- Main Form -->
+        <div class="booking-form">
+            <h2>Book Your Wedding Photography Services</h2>
+
+            <!-- Step 1: Event Selection -->
+            <section class="form-section">
+                <h3>Step 1: Select Wedding Events</h3>
+                <div class="event-selection">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Reception" data-event="Reception">
+                        <span>Reception</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Haldi" data-event="Haldi">
+                        <span>Haldi</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Marriage" data-event="Marriage">
+                        <span>Marriage</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Engagement" data-event="Engagement">
+                        <span>Engagement</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Mehendi" data-event="Mehendi">
+                        <span>Mehendi</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="event" value="Sangeet" data-event="Sangeet">
+                        <span>Sangeet</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Step 2: Service Selection (Dynamic) -->
+            <section class="form-section" id="serviceSection" style="display: none;">
+                <h3>Step 2: Select Services for Each Event</h3>
+                <div id="serviceSelectionContainer"></div>
+            </section>
+
+            <!-- Step 3: Pricing Summary -->
+            <section class="form-section" id="pricingSection" style="display: none;">
+                <h3>Step 3: Pricing Summary</h3>
+                <div class="pricing-summary">
+                    <div id="itemizedList"></div>
+                    <div class="pricing-totals">
+                        <div class="pricing-row">
+                            <span>Subtotal:</span>
+                            <span id="subtotal">₹0</span>
+                        </div>
+                        <div class="pricing-row">
+                            <span>GST (18%):</span>
+                            <span id="tax">₹0</span>
+                        </div>
+                        <div class="pricing-row total">
+                            <span>Total Amount:</span>
+                            <span id="total">₹0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Customer Details -->
+            <section class="form-section" id="detailsSection" style="display: none;">
+                <h3>Step 4: Enter Your Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="clientName">Full Name *</label>
+                        <input type="text" id="clientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail">Email Address *</label>
+                        <input type="email" id="clientEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone">Phone Number *</label>
+                        <input type="tel" id="clientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="weddingDate">Wedding Date *</label>
+                        <input type="date" id="weddingDate" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="clientAddress">Address</label>
+                        <textarea id="clientAddress" rows="3"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="specialRequests">Special Requests / Notes</label>
+                        <textarea id="specialRequests" rows="3"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="button" id="calculateBtn" class="btn btn-secondary" style="display: none;">
+                    Calculate Price
+                </button>
+                <button type="button" id="generateInvoiceBtn" class="btn btn-primary" style="display: none;">
+                    Generate Invoice & Send Email
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 WeddingClikzzz. All rights reserved.</p>
+            <p>Contact: info@weddingclikzzz.com | +91 98765 43210</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Generating invoice and sending email...</p>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Success!</h3>
+            <p>Your invoice has been generated and sent to your email.</p>
+            <button class="btn btn-primary" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
