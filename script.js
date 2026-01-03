@@ -41,6 +41,22 @@ const COMPANY_EMAIL = 'info@weddingclikzzz.com'; // Your company email
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll for hero CTA
+    const smoothScrollLinks = document.querySelectorAll('.smooth-scroll');
+    smoothScrollLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
     // Event selection checkboxes
     const eventCheckboxes = document.querySelectorAll('input[name="event"]');
     eventCheckboxes.forEach(checkbox => {
@@ -52,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Generate invoice button
     document.getElementById('generateInvoiceBtn').addEventListener('click', generateAndSendInvoice);
+
+    // Add entrance animation on scroll
+    observeFormSections();
 });
 
 // Handle event selection
@@ -498,4 +517,30 @@ function closeModal() {
     document.getElementById('successModal').style.display = 'none';
     // Optionally reload the page to start fresh
     // location.reload();
+}
+
+// Observe form sections for scroll animations
+function observeFormSections() {
+    const options = {
+        root: null,
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, options);
+
+    const sections = document.querySelectorAll('.form-section, .feature-card');
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'all 0.6s ease-out';
+        observer.observe(section);
+    });
 }

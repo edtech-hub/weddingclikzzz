@@ -1,15 +1,19 @@
-# Wedding Photography Booking Website
+# WeddingClikzzz - Premium Indian Wedding Photography Booking Website
 
-A professional wedding photography booking website that allows customers to select services and receive detailed invoices.
+A luxurious, premium-themed Indian wedding photography booking website that provides an elegant experience for customers to select services and receive detailed invoices. Designed with rich Indian wedding aesthetics featuring gold, maroon, and burgundy color schemes with ornamental elements.
 
 ## Features
 
+- **Premium Indian Wedding Theme**: Elegant design with traditional Indian aesthetics, rich colors (gold, maroon, burgundy), and ornamental details
+- **Hero Section**: Stunning hero banner with elegant typography and smooth scroll to booking form
 - **Event Selection**: Choose from multiple wedding events (Reception, Haldi, Marriage, Engagement, Mehendi, Sangeet)
-- **Service Selection**: Select photography and videography services for each event
-- **Automatic Price Calculation**: Real-time pricing with subtotal, GST (18%), and total
+- **Service Selection**: Select photography and videography services for each event with beautiful card-based UI
+- **Automatic Price Calculation**: Real-time pricing with subtotal, GST (18%), and total in elegant presentation
 - **Professional PDF Invoice**: Branded invoice with itemized services
 - **Email Delivery**: Automated email delivery to customer and company
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Smooth Animations**: Scroll-triggered animations and smooth transitions
+- **Elegant Typography**: Premium Google Fonts (Cormorant Garamond, Great Vibes, Montserrat)
 
 ## Services Offered
 
@@ -23,6 +27,39 @@ A professional wedding photography booking website that allows customers to sele
 | Pre-Wedding Shoot | Romantic pre-wedding photoshoot session | 30,000 |
 | Album Design | Premium photo album design and printing | 12,000 |
 | Photo Editing | Professional photo editing and enhancement | 8,000 |
+
+## Design Theme
+
+### Premium Indian Wedding Aesthetics
+
+The website features a luxurious Indian wedding theme with:
+
+**Color Palette:**
+- Primary Gold (#D4AF37) - For accents, ornaments, and CTAs
+- Maroon (#800020) & Burgundy (#8B0000) - For headers and primary elements
+- Cream (#FFF8DC) & Ivory (#FFFFF0) - For backgrounds
+- Dark Brown (#3E2723) - For footer and dark sections
+
+**Typography:**
+- **Cormorant Garamond**: Elegant serif font for headings and formal text
+- **Great Vibes**: Cursive script font for romantic quotes and taglines
+- **Montserrat**: Modern sans-serif for body text and UI elements
+
+**Design Elements:**
+- Ornamental dividers and decorative symbols (✦, ❖, ◆)
+- Gradient backgrounds with radial overlays
+- Gold borders and accents
+- Step numbers with premium styling
+- Smooth hover effects and transitions
+- Scroll-triggered animations
+- Custom gold-themed scrollbar
+
+**Sections:**
+1. **Sticky Navigation**: Maroon gradient with gold accents
+2. **Hero Section**: Full-height banner with elegant typography
+3. **Booking Form**: Step-by-step process with numbered sections
+4. **Features Section**: Highlights why to choose WeddingClikzzz
+5. **Premium Footer**: Multi-column layout with company information
 
 ## Installation & Setup
 
