@@ -1,542 +1,734 @@
-// Service pricing configuration
-const servicePrices = {
-    'Cinematography': 25000,
-    'Drone Shoot': 15000,
-    'Candid Photography': 20000,
-    'Traditional Photography': 18000,
-    'Traditional Videography': 22000,
-    'Pre-Wedding Shoot': 30000,
-    'Album Design': 12000,
-    'Photo Editing': 8000
+// Service Pricing Data
+const servicePricing = {
+    cinematography: { name: 'Cinematography', description: 'Full cinematic wedding film', price: 35000 },
+    droneShoot: { name: 'Drone Shoot', description: 'Aerial photography & video', price: 15000 },
+    candidPhotography: { name: 'Candid Photography', description: 'Natural, unposed moments', price: 25000 },
+    traditionalPhotography: { name: 'Traditional Photography', description: 'Classic wedding shots', price: 18000 },
+    traditionalVideography: { name: 'Traditional Videography', description: 'Complete event recording', price: 20000 },
+    photoAlbum: { name: 'Premium Photo Album', description: '40-page premium album', price: 12000 }
 };
 
-const serviceDescriptions = {
-    'Cinematography': 'Full cinematic wedding film with professional editing',
-    'Drone Shoot': 'Aerial photography and video coverage',
-    'Candid Photography': 'Natural, unposed photography capturing emotions',
-    'Traditional Photography': 'Classic wedding photography with posed shots',
-    'Traditional Videography': 'Complete event video recording',
-    'Pre-Wedding Shoot': 'Romantic pre-wedding photoshoot session',
-    'Album Design': 'Premium photo album design and printing',
-    'Photo Editing': 'Professional photo editing and enhancement'
+const eventNames = {
+    reception: 'Reception',
+    haldi: 'Haldi',
+    marriage: 'Marriage',
+    engagement: 'Engagement',
+    mehendi: 'Mehendi',
+    sangeet: 'Sangeet',
+    prewedding: 'Pre-Wedding Shoot',
+    other: 'Other Event'
 };
 
-// Global state
-let selectedServices = {};
+// State Management
 let selectedEvents = [];
+let selectedServices = {};
+let customerDetails = {};
 
-// Initialize EmailJS (Replace with your actual EmailJS credentials)
-// Sign up at https://www.emailjs.com/ and replace these values
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // Replace with your public key
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your service ID
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // Replace with your template ID
-const COMPANY_EMAIL = 'info@weddingclikzzz.com'; // Your company email
+// DOM Elements
+const eventCards = document.querySelectorAll('.event-card');
+const stepItems = document.querySelectorAll('.step-item');
+const formSections = document.querySelectorAll('.form-section');
 
-// Initialize EmailJS
-(function() {
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init(EMAILJS_PUBLIC_KEY);
-    }
-})();
-
-// Event Listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scroll for hero CTA
-    const smoothScrollLinks = document.querySelectorAll('.smooth-scroll');
-    smoothScrollLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-
-    // Event selection checkboxes
-    const eventCheckboxes = document.querySelectorAll('input[name="event"]');
-    eventCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleEventSelection);
-    });
-
-    // Calculate button
-    document.getElementById('calculateBtn').addEventListener('click', calculatePricing);
-
-    // Generate invoice button
-    document.getElementById('generateInvoiceBtn').addEventListener('click', generateAndSendInvoice);
-
-    // Add entrance animation on scroll
-    observeFormSections();
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    initEventHandlers();
+    initNavigationHandlers();
+    initScrollEffects();
+    setMinWeddingDate();
 });
 
-// Handle event selection
-function handleEventSelection() {
-    selectedEvents = [];
-    const eventCheckboxes = document.querySelectorAll('input[name="event"]:checked');
-
-    eventCheckboxes.forEach(checkbox => {
-        selectedEvents.push(checkbox.value);
-    });
-
-    if (selectedEvents.length > 0) {
-        showServiceSelection();
-    } else {
-        hideServiceSelection();
-    }
+function setMinWeddingDate() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('weddingDate').setAttribute('min', today);
 }
 
-// Show service selection for selected events
-function showServiceSelection() {
-    const serviceSection = document.getElementById('serviceSection');
-    const serviceContainer = document.getElementById('serviceSelectionContainer');
-    const calculateBtn = document.getElementById('calculateBtn');
-
-    serviceSection.style.display = 'block';
-    calculateBtn.style.display = 'inline-block';
-
-    // Clear previous services
-    serviceContainer.innerHTML = '';
-    selectedServices = {};
-
-    // Create service selection for each event
-    selectedEvents.forEach(event => {
-        const eventDiv = document.createElement('div');
-        eventDiv.className = 'event-services';
-        eventDiv.innerHTML = `
-            <h4>${event}</h4>
-            <div class="services-grid" id="services-${event}"></div>
-        `;
-        serviceContainer.appendChild(eventDiv);
-
-        // Add service checkboxes
-        const servicesGrid = eventDiv.querySelector('.services-grid');
-        Object.keys(servicePrices).forEach(service => {
-            const serviceDiv = document.createElement('div');
-            serviceDiv.className = 'service-item';
-            serviceDiv.innerHTML = `
-                <label>
-                    <input type="checkbox"
-                           class="service-checkbox"
-                           data-event="${event}"
-                           data-service="${service}"
-                           data-price="${servicePrices[service]}">
-                    ${service}
-                </label>
-                <div class="service-price">₹${servicePrices[service].toLocaleString('en-IN')}</div>
-                <div class="service-description">${serviceDescriptions[service]}</div>
-            `;
-            servicesGrid.appendChild(serviceDiv);
-
-            // Add change listener
-            const checkbox = serviceDiv.querySelector('input[type="checkbox"]');
-            checkbox.addEventListener('change', handleServiceSelection);
+// Event Selection Handlers
+function initEventHandlers() {
+    eventCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            card.classList.toggle('selected');
+            const checkbox = card.querySelector('input');
+            checkbox.checked = card.classList.contains('selected');
+            updateSelectedEvents();
         });
-
-        // Initialize selectedServices for this event
-        selectedServices[event] = [];
     });
 }
 
-// Hide service selection
-function hideServiceSelection() {
-    document.getElementById('serviceSection').style.display = 'none';
-    document.getElementById('pricingSection').style.display = 'none';
-    document.getElementById('detailsSection').style.display = 'none';
-    document.getElementById('calculateBtn').style.display = 'none';
-    document.getElementById('generateInvoiceBtn').style.display = 'none';
+function updateSelectedEvents() {
+    selectedEvents = Array.from(document.querySelectorAll('.event-card.selected'))
+        .map(card => card.dataset.event);
+
+    document.getElementById('toStep2').disabled = selectedEvents.length === 0;
 }
 
-// Handle service selection
-function handleServiceSelection(e) {
-    const event = e.target.dataset.event;
-    const service = e.target.dataset.service;
-    const price = parseInt(e.target.dataset.price);
+// Navigation Handlers
+function initNavigationHandlers() {
+    // Step 1 to 2
+    document.getElementById('toStep2').addEventListener('click', () => {
+        generateServicesForEvents();
+        goToStep(2);
+    });
 
-    if (e.target.checked) {
-        selectedServices[event].push({
-            service: service,
-            price: price
-        });
-    } else {
-        selectedServices[event] = selectedServices[event].filter(s => s.service !== service);
-    }
-}
+    // Step 2 to 1
+    document.getElementById('backToStep1').addEventListener('click', () => goToStep(1));
 
-// Calculate pricing
-function calculatePricing() {
-    let subtotal = 0;
-    const itemizedList = document.getElementById('itemizedList');
-    itemizedList.innerHTML = '';
+    // Step 2 to 3
+    document.getElementById('toStep3').addEventListener('click', () => goToStep(3));
 
-    // Calculate subtotal and create itemized list
-    Object.keys(selectedServices).forEach(event => {
-        if (selectedServices[event].length > 0) {
-            selectedServices[event].forEach(service => {
-                subtotal += service.price;
+    // Step 3 to 2
+    document.getElementById('backToStep2').addEventListener('click', () => goToStep(2));
 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'itemized-item';
-                itemDiv.innerHTML = `
-                    <span>${event} - ${service.service}</span>
-                    <span>₹${service.price.toLocaleString('en-IN')}</span>
-                `;
-                itemizedList.appendChild(itemDiv);
-            });
+    // Step 3 to 4
+    document.getElementById('toStep4').addEventListener('click', () => {
+        if (validateCustomerDetails()) {
+            generateInvoicePreview();
+            goToStep(4);
         }
     });
 
-    // Calculate tax and total
-    const tax = subtotal * 0.18; // 18% GST
+    // Step 4 to 3
+    document.getElementById('backToStep3').addEventListener('click', () => goToStep(3));
+
+    // Generate Invoice
+    document.getElementById('generateInvoice').addEventListener('click', generatePDF);
+
+    // Start Over
+    document.getElementById('startOver').addEventListener('click', resetForm);
+}
+
+function goToStep(step) {
+    // Update step indicators
+    stepItems.forEach((item, index) => {
+        item.classList.remove('active', 'completed');
+        if (index + 1 < step) {
+            item.classList.add('completed');
+        } else if (index + 1 === step) {
+            item.classList.add('active');
+        }
+    });
+
+    // Update form sections
+    formSections.forEach(section => section.classList.remove('active'));
+    document.getElementById(`step${step}`).classList.add('active');
+
+    // Scroll to top of form
+    document.getElementById('booking').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Generate Services for Selected Events
+function generateServicesForEvents() {
+    const container = document.getElementById('servicesContainer');
+    container.innerHTML = '';
+
+    selectedEvents.forEach(event => {
+        if (!selectedServices[event]) {
+            selectedServices[event] = [];
+        }
+
+        const eventBlock = document.createElement('div');
+        eventBlock.className = 'event-services-block';
+        eventBlock.innerHTML = `
+            <div class="event-services-header">
+                <h3>${eventNames[event]}</h3>
+            </div>
+            <div class="services-grid" data-event="${event}">
+                ${Object.entries(servicePricing).map(([key, service]) => `
+                    <div class="service-item ${selectedServices[event].includes(key) ? 'selected' : ''}" data-service="${key}">
+                        <input type="checkbox" ${selectedServices[event].includes(key) ? 'checked' : ''}>
+                        <div class="service-checkbox">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <div class="service-info">
+                            <h4>${service.name}</h4>
+                            <p>${service.description}</p>
+                        </div>
+                        <div class="service-price">₹${service.price.toLocaleString('en-IN')}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(eventBlock);
+    });
+
+    // Add event listeners to service items
+    document.querySelectorAll('.service-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const event = item.closest('.services-grid').dataset.event;
+            const service = item.dataset.service;
+
+            item.classList.toggle('selected');
+            const checkbox = item.querySelector('input');
+            checkbox.checked = item.classList.contains('selected');
+
+            if (item.classList.contains('selected')) {
+                if (!selectedServices[event].includes(service)) {
+                    selectedServices[event].push(service);
+                }
+            } else {
+                selectedServices[event] = selectedServices[event].filter(s => s !== service);
+            }
+
+            updateStep3Button();
+        });
+    });
+
+    updateStep3Button();
+}
+
+function updateStep3Button() {
+    const hasServices = Object.values(selectedServices).some(services => services.length > 0);
+    document.getElementById('toStep3').disabled = !hasServices;
+}
+
+// Validate Customer Details
+function validateCustomerDetails() {
+    let isValid = true;
+
+    // Clear all previous errors
+    clearAllErrors();
+
+    const name = document.getElementById('clientName').value.trim();
+    const email = document.getElementById('clientEmail').value.trim();
+    const phone = document.getElementById('clientPhone').value.trim();
+    const weddingDate = document.getElementById('weddingDate').value;
+
+    if (!name) {
+        showFieldError('clientName', 'Please enter your full name');
+        isValid = false;
+    }
+
+    if (!email) {
+        showFieldError('clientEmail', 'Please enter your email address');
+        isValid = false;
+    } else if (!isValidEmail(email)) {
+        showFieldError('clientEmail', 'Please enter a valid email address');
+        isValid = false;
+    }
+
+    if (!phone) {
+        showFieldError('clientPhone', 'Please enter your phone number');
+        isValid = false;
+    }
+
+    if (!weddingDate) {
+        showFieldError('weddingDate', 'Please select your wedding date');
+        isValid = false;
+    }
+
+    if (!isValid) {
+        // Scroll to the first error
+        const firstError = document.querySelector('.form-group input.error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstError.focus();
+        }
+        return false;
+    }
+
+    customerDetails = {
+        name,
+        partnerName: document.getElementById('partnerName').value.trim(),
+        email,
+        phone,
+        weddingDate,
+        venue: document.getElementById('weddingVenue').value.trim(),
+        address: document.getElementById('clientAddress').value.trim(),
+        notes: document.getElementById('additionalNotes').value.trim()
+    };
+
+    return true;
+}
+
+function showFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    const errorElement = document.getElementById(fieldId + 'Error');
+
+    field.classList.add('error');
+    if (errorElement) {
+        errorElement.querySelector('span').textContent = message;
+        errorElement.classList.add('show');
+    }
+
+    // Remove error on input
+    field.addEventListener('input', function removeError() {
+        field.classList.remove('error');
+        if (errorElement) {
+            errorElement.classList.remove('show');
+        }
+        field.removeEventListener('input', removeError);
+    }, { once: true });
+}
+
+function clearAllErrors() {
+    const errorFields = document.querySelectorAll('.form-group input.error, .form-group textarea.error');
+    errorFields.forEach(field => field.classList.remove('error'));
+
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(msg => msg.classList.remove('show'));
+}
+
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Calculate Totals
+function calculateTotals() {
+    let subtotal = 0;
+    const items = [];
+
+    selectedEvents.forEach(event => {
+        const eventServices = selectedServices[event] || [];
+        eventServices.forEach(serviceKey => {
+            const service = servicePricing[serviceKey];
+            subtotal += service.price;
+            items.push({
+                event: eventNames[event],
+                service: service.name,
+                price: service.price
+            });
+        });
+    });
+
+    const tax = Math.round(subtotal * 0.18); // 18% GST
     const total = subtotal + tax;
 
-    // Update display
-    document.getElementById('subtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
-    document.getElementById('tax').textContent = `₹${tax.toLocaleString('en-IN')}`;
-    document.getElementById('total').textContent = `₹${total.toLocaleString('en-IN')}`;
-
-    // Show pricing and details sections
-    if (subtotal > 0) {
-        document.getElementById('pricingSection').style.display = 'block';
-        document.getElementById('detailsSection').style.display = 'block';
-        document.getElementById('generateInvoiceBtn').style.display = 'inline-block';
-    } else {
-        alert('Please select at least one service');
-    }
+    return { subtotal, tax, total, items };
 }
 
-// Generate and send invoice
-async function generateAndSendInvoice() {
-    // Validate form
-    const clientName = document.getElementById('clientName').value;
-    const clientEmail = document.getElementById('clientEmail').value;
-    const clientPhone = document.getElementById('clientPhone').value;
-    const weddingDate = document.getElementById('weddingDate').value;
+// Generate Invoice Preview
+function generateInvoicePreview() {
+    const { subtotal, tax, total, items } = calculateTotals();
+    const invoiceNumber = 'WC-' + Date.now().toString().slice(-8);
+    const today = new Date().toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
+    const weddingDateFormatted = new Date(customerDetails.weddingDate).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
 
-    if (!clientName || !clientEmail || !clientPhone || !weddingDate) {
-        alert('Please fill in all required fields (Name, Email, Phone, Wedding Date)');
-        return;
-    }
+    // Group items by event
+    const groupedItems = {};
+    items.forEach(item => {
+        if (!groupedItems[item.event]) {
+            groupedItems[item.event] = [];
+        }
+        groupedItems[item.event].push(item);
+    });
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(clientEmail)) {
-        alert('Please enter a valid email address');
-        return;
-    }
+    const invoicePreview = document.getElementById('invoicePreview');
+    invoicePreview.innerHTML = `
+        <div class="invoice-header">
+            <div class="invoice-header-top">
+                <div class="invoice-logo">
+                    <h2>Wedding<span>Clickz</span></h2>
+                </div>
+                <div class="invoice-badge">QUOTATION</div>
+            </div>
+            <div class="invoice-meta">
+                <div class="invoice-meta-item">
+                    <label>Invoice Number</label>
+                    <span>${invoiceNumber}</span>
+                </div>
+                <div class="invoice-meta-item">
+                    <label>Invoice Date</label>
+                    <span>${today}</span>
+                </div>
+                <div class="invoice-meta-item">
+                    <label>Wedding Date</label>
+                    <span>${weddingDateFormatted}</span>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-body">
+            <div class="invoice-parties">
+                <div class="invoice-party">
+                    <h4>From</h4>
+                    <p>
+                        <strong>WeddingClickz Photography</strong><br>
+                        2nd floor, 47th Cross Rd, 5th Block,<br>
+                        TMC Layout, 1st Phase, Jayanagar,<br>
+                        Bengaluru, Karnataka 560041<br>
+                        Phone: +91 97402 22927
+                    </p>
+                </div>
+                <div class="invoice-party">
+                    <h4>To</h4>
+                    <p>
+                        <strong>${customerDetails.name}${customerDetails.partnerName ? ' & ' + customerDetails.partnerName : ''}</strong><br>
+                        ${customerDetails.address ? customerDetails.address + '<br>' : ''}
+                        Email: ${customerDetails.email}<br>
+                        Phone: ${customerDetails.phone}
+                        ${customerDetails.venue ? '<br>Venue: ' + customerDetails.venue : ''}
+                    </p>
+                </div>
+            </div>
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Object.entries(groupedItems).map(([event, services]) => `
+                        <tr>
+                            <td class="event-name">${event}</td>
+                            <td></td>
+                        </tr>
+                        ${services.map(service => `
+                            <tr>
+                                <td class="service-name">↳ ${service.service}</td>
+                                <td>₹${service.price.toLocaleString('en-IN')}</td>
+                            </tr>
+                        `).join('')}
+                    `).join('')}
+                </tbody>
+            </table>
+            <div class="invoice-totals">
+                <div class="invoice-totals-box">
+                    <div class="invoice-totals-row">
+                        <span>Subtotal</span>
+                        <span>₹${subtotal.toLocaleString('en-IN')}</span>
+                    </div>
+                    <div class="invoice-totals-row">
+                        <span>GST (18%)</span>
+                        <span>₹${tax.toLocaleString('en-IN')}</span>
+                    </div>
+                    <div class="invoice-totals-row total">
+                        <span>Total</span>
+                        <span>₹${total.toLocaleString('en-IN')}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-footer">
+            <h4>Terms & Conditions</h4>
+            <ul>
+                <li>50% advance payment required to confirm booking</li>
+                <li>Remaining balance due 7 days before the event</li>
+                <li>All edited photos delivered within 10 working days</li>
+                <li>Cinematic films delivered within 2-4 weeks</li>
+                <li>Travel and accommodation charges extra for outstation events</li>
+            </ul>
+        </div>
+    `;
 
-    // Show loading
-    document.getElementById('loadingOverlay').style.display = 'flex';
-
-    try {
-        // Generate PDF
-        const pdfBlob = await generateInvoicePDF();
-
-        // Send email
-        await sendInvoiceEmail(pdfBlob, clientEmail, clientName);
-
-        // Hide loading
-        document.getElementById('loadingOverlay').style.display = 'none';
-
-        // Show success modal
-        document.getElementById('successModal').style.display = 'flex';
-
-        // Reset form after 3 seconds
-        setTimeout(() => {
-            // location.reload();
-        }, 3000);
-
-    } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('loadingOverlay').style.display = 'none';
-        alert('An error occurred. Please try again. Error: ' + error.message);
-    }
+    // Update price summary
+    const priceSummary = document.getElementById('priceSummaryFinal');
+    priceSummary.innerHTML = `
+        <h3>Price Summary</h3>
+        <div class="price-items">
+            ${Object.entries(groupedItems).map(([event, services]) => `
+                <div class="price-item">
+                    <span class="price-item-name">${event}</span>
+                    <span class="price-item-value">₹${services.reduce((sum, s) => sum + s.price, 0).toLocaleString('en-IN')}</span>
+                </div>
+            `).join('')}
+        </div>
+        <div class="price-item">
+            <span class="price-item-name">Subtotal</span>
+            <span class="price-item-value">₹${subtotal.toLocaleString('en-IN')}</span>
+        </div>
+        <div class="price-item">
+            <span class="price-item-name">GST (18%)</span>
+            <span class="price-item-value">₹${tax.toLocaleString('en-IN')}</span>
+        </div>
+        <div class="price-total">
+            <span class="price-total-label">Total</span>
+            <span class="price-total-value">₹${total.toLocaleString('en-IN')}</span>
+        </div>
+    `;
 }
 
-// Generate PDF invoice
-async function generateInvoicePDF() {
+// Generate PDF Invoice
+async function generatePDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    let y = 0;
 
-    // Get form data
-    const clientName = document.getElementById('clientName').value;
-    const clientEmail = document.getElementById('clientEmail').value;
-    const clientPhone = document.getElementById('clientPhone').value;
-    const weddingDate = document.getElementById('weddingDate').value;
-    const clientAddress = document.getElementById('clientAddress').value;
-    const specialRequests = document.getElementById('specialRequests').value;
+    const { subtotal, tax, total, items } = calculateTotals();
+    const invoiceNumber = 'WC-' + Date.now().toString().slice(-8);
+    const today = new Date().toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
+    const weddingDateFormatted = new Date(customerDetails.weddingDate).toLocaleDateString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    });
 
-    // Get pricing data
-    const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('₹', '').replace(',', ''));
-    const tax = parseFloat(document.getElementById('tax').textContent.replace('₹', '').replace(',', ''));
-    const total = parseFloat(document.getElementById('total').textContent.replace('₹', '').replace(',', ''));
+    // Header Background
+    doc.setFillColor(44, 44, 44);
+    doc.rect(0, 0, pageWidth, 55, 'F');
 
-    // Invoice number and date
-    const invoiceNumber = 'INV-' + Date.now();
-    const invoiceDate = new Date().toLocaleDateString('en-IN');
-
-    // PDF Layout
-    let yPos = 20;
-
-    // Header - Company Name
+    // Logo Text
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.setTextColor(102, 126, 234);
-    doc.text('WeddingClikzzz', 105, yPos, { align: 'center' });
+    doc.setFont('helvetica', 'bold');
+    doc.text('Wedding', margin, 25);
+    doc.setTextColor(201, 168, 124);
+    doc.text('Clickz', margin + 38, 25);
 
-    yPos += 8;
-    doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Capturing Your Beautiful Moments', 105, yPos, { align: 'center' });
+    // Quotation Badge
+    doc.setFillColor(201, 168, 124);
+    doc.roundedRect(pageWidth - margin - 35, 15, 35, 10, 2, 2, 'F');
+    doc.setTextColor(44, 44, 44);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('QUOTATION', pageWidth - margin - 32, 22);
 
-    yPos += 15;
+    // Invoice Meta
+    doc.setTextColor(232, 213, 183);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
 
-    // Company Details
-    doc.setFontSize(9);
-    doc.setTextColor(60, 60, 60);
-    doc.text('WeddingClikzzz Photography & Videography', 20, yPos);
-    yPos += 5;
-    doc.text('123 Photography Street, Mumbai, Maharashtra 400001', 20, yPos);
-    yPos += 5;
-    doc.text('Email: info@weddingclikzzz.com | Phone: +91 98765 43210', 20, yPos);
-    yPos += 5;
-    doc.text('GST: 27XXXXX1234X1ZX | PAN: XXXXX1234X', 20, yPos);
+    doc.text('INVOICE NUMBER', margin, 40);
+    doc.text('INVOICE DATE', pageWidth/2 - 15, 40);
+    doc.text('WEDDING DATE', pageWidth - margin - 25, 40);
 
-    yPos += 10;
-
-    // Line separator
-    doc.setDrawColor(102, 126, 234);
-    doc.setLineWidth(0.5);
-    doc.line(20, yPos, 190, yPos);
-
-    yPos += 10;
-
-    // Invoice Title
-    doc.setFontSize(16);
-    doc.setTextColor(102, 126, 234);
-    doc.text('INVOICE', 105, yPos, { align: 'center' });
-
-    yPos += 10;
-
-    // Invoice details
-    doc.setFontSize(10);
-    doc.setTextColor(60, 60, 60);
-    doc.text(`Invoice Number: ${invoiceNumber}`, 20, yPos);
-    doc.text(`Invoice Date: ${invoiceDate}`, 140, yPos);
-    yPos += 6;
-    doc.text(`Wedding Date: ${new Date(weddingDate).toLocaleDateString('en-IN')}`, 140, yPos);
-
-    yPos += 10;
-
-    // Client Details
-    doc.setFontSize(11);
-    doc.setTextColor(102, 126, 234);
-    doc.text('Bill To:', 20, yPos);
-    yPos += 6;
-
-    doc.setFontSize(10);
-    doc.setTextColor(60, 60, 60);
-    doc.text(clientName, 20, yPos);
-    yPos += 5;
-    doc.text(`Email: ${clientEmail}`, 20, yPos);
-    yPos += 5;
-    doc.text(`Phone: ${clientPhone}`, 20, yPos);
-    if (clientAddress) {
-        yPos += 5;
-        const addressLines = doc.splitTextToSize(clientAddress, 170);
-        doc.text(addressLines, 20, yPos);
-        yPos += (addressLines.length * 5);
-    }
-
-    yPos += 10;
-
-    // Table Header
-    doc.setFillColor(102, 126, 234);
-    doc.rect(20, yPos, 170, 8, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
-    doc.text('Event', 22, yPos + 5);
-    doc.text('Service', 70, yPos + 5);
-    doc.text('Amount (₹)', 160, yPos + 5);
+    doc.text(invoiceNumber, margin, 47);
+    doc.text(today, pageWidth/2 - 15, 47);
+    doc.text(weddingDateFormatted, pageWidth - margin - 25, 47);
 
-    yPos += 10;
+    y = 70;
 
-    // Table Rows
-    doc.setTextColor(60, 60, 60);
-    doc.setFontSize(9);
-
-    Object.keys(selectedServices).forEach(event => {
-        selectedServices[event].forEach(service => {
-            if (yPos > 270) {
-                doc.addPage();
-                yPos = 20;
-            }
-            doc.text(event, 22, yPos);
-            doc.text(service.service, 70, yPos);
-            doc.text(service.price.toLocaleString('en-IN'), 160, yPos);
-            yPos += 6;
-        });
-    });
-
-    yPos += 5;
-
-    // Line separator
-    doc.setDrawColor(200, 200, 200);
-    doc.line(20, yPos, 190, yPos);
-
-    yPos += 8;
-
-    // Totals
-    doc.setFontSize(10);
-    doc.text('Subtotal:', 130, yPos);
-    doc.text(`₹${subtotal.toLocaleString('en-IN')}`, 160, yPos);
-    yPos += 6;
-
-    doc.text('GST (18%):', 130, yPos);
-    doc.text(`₹${tax.toLocaleString('en-IN')}`, 160, yPos);
-    yPos += 6;
-
-    doc.setLineWidth(0.5);
-    doc.line(130, yPos, 190, yPos);
-    yPos += 8;
-
-    doc.setFontSize(12);
-    doc.setTextColor(102, 126, 234);
-    doc.text('Total Amount:', 130, yPos);
-    doc.text(`₹${total.toLocaleString('en-IN')}`, 160, yPos);
-
-    yPos += 15;
-
-    // Special Requests
-    if (specialRequests) {
-        doc.setFontSize(10);
-        doc.setTextColor(102, 126, 234);
-        doc.text('Special Requests:', 20, yPos);
-        yPos += 6;
-        doc.setTextColor(60, 60, 60);
-        doc.setFontSize(9);
-        const requestLines = doc.splitTextToSize(specialRequests, 170);
-        doc.text(requestLines, 20, yPos);
-        yPos += (requestLines.length * 5) + 10;
-    }
-
-    // Terms and Conditions
-    if (yPos > 240) {
-        doc.addPage();
-        yPos = 20;
-    }
-
-    doc.setFontSize(10);
-    doc.setTextColor(102, 126, 234);
-    doc.text('Terms & Conditions:', 20, yPos);
-    yPos += 6;
-
+    // From / To Section
+    doc.setTextColor(201, 168, 124);
     doc.setFontSize(8);
-    doc.setTextColor(60, 60, 60);
-    const terms = [
-        '1. 50% advance payment required to confirm booking',
-        '2. Balance payment due before or on the wedding date',
-        '3. Raw footage will not be provided',
-        '4. Edited photos/videos will be delivered within 30-45 days',
-        '5. Cancellation charges apply as per agreement',
-        '6. All rights reserved by WeddingClikzzz'
+    doc.setFont('helvetica', 'bold');
+    doc.text('FROM', margin, y);
+    doc.text('TO', pageWidth/2 + 10, y);
+
+    y += 6;
+    doc.setTextColor(26, 26, 26);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('WeddingClickz Photography', margin, y);
+    doc.text(customerDetails.name + (customerDetails.partnerName ? ' & ' + customerDetails.partnerName : ''), pageWidth/2 + 10, y);
+
+    y += 5;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(107, 107, 107);
+
+    const fromLines = [
+        '2nd floor, 47th Cross Rd, 5th Block,',
+        'TMC Layout, 1st Phase, Jayanagar,',
+        'Bengaluru, Karnataka 560041',
+        'Phone: +91 97402 22927'
     ];
 
-    terms.forEach(term => {
-        doc.text(term, 20, yPos);
-        yPos += 5;
+    const toLines = [];
+    if (customerDetails.address) toLines.push(customerDetails.address);
+    toLines.push('Email: ' + customerDetails.email);
+    toLines.push('Phone: ' + customerDetails.phone);
+    if (customerDetails.venue) toLines.push('Venue: ' + customerDetails.venue);
+
+    fromLines.forEach((line, i) => {
+        doc.text(line, margin, y + (i * 5));
     });
 
-    yPos += 10;
+    toLines.forEach((line, i) => {
+        const displayLine = line.length > 40 ? line.substring(0, 40) + '...' : line;
+        doc.text(displayLine, pageWidth/2 + 10, y + (i * 5));
+    });
+
+    y += Math.max(fromLines.length, toLines.length) * 5 + 10;
+
+    // Table Header
+    doc.setFillColor(250, 247, 242);
+    doc.rect(margin, y, pageWidth - (margin * 2), 10, 'F');
+
+    doc.setTextColor(139, 115, 85);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DESCRIPTION', margin + 5, y + 7);
+    doc.text('AMOUNT', pageWidth - margin - 25, y + 7);
+
+    y += 15;
+
+    // Group items by event
+    const groupedItems = {};
+    items.forEach(item => {
+        if (!groupedItems[item.event]) {
+            groupedItems[item.event] = [];
+        }
+        groupedItems[item.event].push(item);
+    });
+
+    // Table Content
+    doc.setFontSize(10);
+    Object.entries(groupedItems).forEach(([event, services]) => {
+        // Event name
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(44, 44, 44);
+        doc.text(event, margin + 5, y);
+        y += 6;
+
+        // Services
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(107, 107, 107);
+        services.forEach(service => {
+            doc.text('↳ ' + service.service, margin + 10, y);
+            doc.setTextColor(44, 44, 44);
+            doc.text('₹' + service.price.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+            doc.setTextColor(107, 107, 107);
+
+            // Separator line
+            doc.setDrawColor(232, 213, 183);
+            doc.setLineWidth(0.1);
+            doc.line(margin, y + 3, pageWidth - margin, y + 3);
+            y += 8;
+        });
+
+        y += 3;
+    });
+
+    y += 5;
+
+    // Totals
+    const totalsX = pageWidth - margin - 70;
+
+    doc.setTextColor(107, 107, 107);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Subtotal', totalsX, y);
+    doc.setTextColor(44, 44, 44);
+    doc.text('₹' + subtotal.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+
+    y += 7;
+    doc.setTextColor(107, 107, 107);
+    doc.text('GST (18%)', totalsX, y);
+    doc.setTextColor(44, 44, 44);
+    doc.text('₹' + tax.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+
+    y += 3;
+    doc.setDrawColor(201, 168, 124);
+    doc.setLineWidth(0.5);
+    doc.line(totalsX, y, pageWidth - margin, y);
+
+    y += 8;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('TOTAL', totalsX, y);
+    doc.setTextColor(139, 115, 85);
+    doc.setFontSize(14);
+    doc.text('₹' + total.toLocaleString('en-IN'), pageWidth - margin - 25, y);
+
+    // Terms & Conditions
+    y += 20;
+    doc.setFillColor(250, 247, 242);
+    doc.rect(margin, y, pageWidth - (margin * 2), 45, 'F');
+
+    y += 8;
+    doc.setTextColor(44, 44, 44);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Terms & Conditions', margin + 5, y);
+
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(107, 107, 107);
+
+    const terms = [
+        '• 50% advance payment required to confirm booking',
+        '• Remaining balance due 7 days before the event',
+        '• All edited photos delivered within 10 working days',
+        '• Cinematic films delivered within 2-4 weeks',
+        '• Travel and accommodation charges extra for outstation events'
+    ];
+
+    terms.forEach((term, i) => {
+        doc.text(term, margin + 5, y + (i * 5));
+    });
 
     // Footer
-    doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Thank you for choosing WeddingClikzzz!', 105, yPos, { align: 'center' });
-    yPos += 5;
-    doc.text('For any queries, contact us at info@weddingclikzzz.com or +91 98765 43210', 105, yPos, { align: 'center' });
+    doc.setTextColor(201, 168, 124);
+    doc.setFontSize(8);
+    doc.text('Thank you for choosing WeddingClickz!', pageWidth/2, pageHeight - 15, { align: 'center' });
 
-    // Save and return blob
-    const pdfBlob = doc.output('blob');
+    // Save PDF
+    const fileName = `WeddingClickz_Invoice_${invoiceNumber}.pdf`;
+    doc.save(fileName);
 
-    // Also trigger download for user
-    doc.save(`WeddingClikzzz_Invoice_${clientName.replace(/\s/g, '_')}.pdf`);
+    showToast('Invoice downloaded successfully!', 'success');
 
-    return pdfBlob;
+    // Show success step
+    formSections.forEach(section => section.classList.remove('active'));
+    document.getElementById('successStep').classList.add('active');
 }
 
-// Send invoice via email
-async function sendInvoiceEmail(pdfBlob, clientEmail, clientName) {
-    // Convert blob to base64
-    const base64PDF = await blobToBase64(pdfBlob);
+// Reset Form
+function resetForm() {
+    selectedEvents = [];
+    selectedServices = {};
+    customerDetails = {};
 
-    const clientEmailParams = {
-        to_email: clientEmail,
-        to_name: clientName,
-        from_name: 'WeddingClikzzz',
-        message: `Dear ${clientName},\n\nThank you for choosing WeddingClikzzz for your special day!\n\nPlease find attached your booking invoice. We are excited to capture your beautiful moments.\n\nIf you have any questions, feel free to contact us.\n\nBest Regards,\nWeddingClikzzz Team`,
-        pdf_attachment: base64PDF
-    };
+    // Reset event cards
+    eventCards.forEach(card => {
+        card.classList.remove('selected');
+        card.querySelector('input').checked = false;
+    });
 
-    // Note: EmailJS has limitations with attachments in free tier
-    // For production, you should use a backend service to send emails with attachments
+    // Reset form fields
+    document.getElementById('clientName').value = '';
+    document.getElementById('partnerName').value = '';
+    document.getElementById('clientEmail').value = '';
+    document.getElementById('clientPhone').value = '';
+    document.getElementById('weddingDate').value = '';
+    document.getElementById('weddingVenue').value = '';
+    document.getElementById('clientAddress').value = '';
+    document.getElementById('additionalNotes').value = '';
 
-    console.log('Invoice generated and downloaded');
-    console.log('Email would be sent to:', clientEmail);
-    console.log('Company email copy would be sent to:', COMPANY_EMAIL);
+    // Reset buttons
+    document.getElementById('toStep2').disabled = true;
+    document.getElementById('toStep3').disabled = true;
 
-    // If you have EmailJS configured with proper template and attachment support:
-    /*
-    try {
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, clientEmailParams);
-        console.log('Email sent successfully');
-    } catch (error) {
-        console.error('Email sending failed:', error);
-        throw new Error('Email sending failed. However, PDF has been downloaded.');
-    }
-    */
-
-    // For demonstration, we're just logging and downloading the PDF
-    // In production, implement a backend API to handle email sending with attachments
+    // Go to step 1
+    goToStep(1);
 }
 
-// Helper function to convert blob to base64
-function blobToBase64(blob) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
+// Scroll Effects
+function initScrollEffects() {
+    const header = document.getElementById('header');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
     });
 }
 
-// Close modal
-function closeModal() {
-    document.getElementById('successModal').style.display = 'none';
-    // Optionally reload the page to start fresh
-    // location.reload();
-}
+// Toast Notification
+function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
 
-// Observe form sections for scroll animations
-function observeFormSections() {
-    const options = {
-        root: null,
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    toast.className = 'toast ' + type;
+    toastMessage.textContent = message;
+    toast.classList.add('show');
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, options);
-
-    const sections = document.querySelectorAll('.form-section, .feature-card');
-    sections.forEach(section => {
-        observer.observe(section);
-    });
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
 }

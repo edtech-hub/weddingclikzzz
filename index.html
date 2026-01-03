@@ -3,254 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeddingClikzzz - Premium Wedding Photography & Cinematography</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Google Fonts for elegant typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-    <!-- jsPDF Library for PDF generation -->
+    <title>WeddingClickz - Book Your Wedding Photography</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- EmailJS for email delivery -->
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
             <div class="logo">
-                <span class="logo-ornament">❖</span>
-                <span class="logo-text">WeddingClikzzz</span>
-                <span class="logo-ornament">❖</span>
+                <div class="logo-icon">W</div>
+                <div class="logo-text">Wedding<span>Clickz</span></div>
             </div>
-            <div class="nav-contact">
-                <span class="contact-item">📞 +91 98765 43210</span>
-                <span class="contact-divider">|</span>
-                <span class="contact-item">✉ info@weddingclikzzz.com</span>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="https://www.weddingclickz.com/">Home</a></li>
+                    <li><a href="https://www.weddingclickz.com/about-us/">About</a></li>
+                    <li><a href="https://www.weddingclickz.com/portfolio/">Portfolio</a></li>
+                    <li><a href="https://www.weddingclickz.com/contact-us/">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-overlay"></div>
+    <section class="hero">
         <div class="hero-content">
-            <div class="ornamental-line top"></div>
-            <h1 class="hero-title">Capturing Eternal Love</h1>
-            <p class="hero-subtitle">Premium Indian Wedding Photography & Cinematography</p>
-            <div class="ornamental-line bottom"></div>
-            <p class="hero-description">
-                Every love story is beautiful, but yours is our favorite to tell
-            </p>
-            <a href="#booking" class="hero-cta smooth-scroll">Begin Your Journey</a>
+            <div class="hero-badge">Premium Wedding Photography</div>
+            <h1>Book Your <span>Perfect</span><br>Wedding Coverage</h1>
+            <p>Select your events, choose your services, and receive a professional invoice instantly. Let us capture every precious moment of your special day.</p>
+            <a href="#booking" class="hero-cta">
+                Start Booking
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+            </a>
         </div>
-        <div class="hero-pattern-left"></div>
-        <div class="hero-pattern-right"></div>
-    </section>
-
-    <div class="container" id="booking">
-
-        <!-- Main Form -->
-        <div class="booking-form">
-            <div class="section-header">
-                <div class="section-ornament">✦</div>
-                <h2>Book Your Wedding Photography Services</h2>
-                <div class="section-ornament">✦</div>
-            </div>
-            <p class="section-intro">Select your events and services to receive a personalized quotation</p>
-
-            <!-- Step 1: Event Selection -->
-            <section class="form-section">
-                <div class="step-header">
-                    <span class="step-number">01</span>
-                    <h3>Select Wedding Events</h3>
-                </div>
-                <div class="event-selection">
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Reception" data-event="Reception">
-                        <span>Reception</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Haldi" data-event="Haldi">
-                        <span>Haldi</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Marriage" data-event="Marriage">
-                        <span>Marriage</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Engagement" data-event="Engagement">
-                        <span>Engagement</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Mehendi" data-event="Mehendi">
-                        <span>Mehendi</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" name="event" value="Sangeet" data-event="Sangeet">
-                        <span>Sangeet</span>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Step 2: Service Selection (Dynamic) -->
-            <section class="form-section" id="serviceSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">02</span>
-                    <h3>Select Services for Each Event</h3>
-                </div>
-                <div id="serviceSelectionContainer"></div>
-            </section>
-
-            <!-- Step 3: Pricing Summary -->
-            <section class="form-section" id="pricingSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">03</span>
-                    <h3>Pricing Summary</h3>
-                </div>
-                <div class="pricing-summary">
-                    <div id="itemizedList"></div>
-                    <div class="pricing-totals">
-                        <div class="pricing-row">
-                            <span>Subtotal:</span>
-                            <span id="subtotal">₹0</span>
-                        </div>
-                        <div class="pricing-row">
-                            <span>GST (18%):</span>
-                            <span id="tax">₹0</span>
-                        </div>
-                        <div class="pricing-row total">
-                            <span>Total Amount:</span>
-                            <span id="total">₹0</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Step 4: Customer Details -->
-            <section class="form-section" id="detailsSection" style="display: none;">
-                <div class="step-header">
-                    <span class="step-number">04</span>
-                    <h3>Enter Your Details</h3>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="clientName">Full Name *</label>
-                        <input type="text" id="clientName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="clientEmail">Email Address *</label>
-                        <input type="email" id="clientEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="clientPhone">Phone Number *</label>
-                        <input type="tel" id="clientPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="weddingDate">Wedding Date *</label>
-                        <input type="date" id="weddingDate" required>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="clientAddress">Address</label>
-                        <textarea id="clientAddress" rows="3"></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="specialRequests">Special Requests / Notes</label>
-                        <textarea id="specialRequests" rows="3"></textarea>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button type="button" id="calculateBtn" class="btn btn-secondary" style="display: none;">
-                    Calculate Price
-                </button>
-                <button type="button" id="generateInvoiceBtn" class="btn btn-primary" style="display: none;">
-                    Generate Invoice & Send Email
-                </button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Features Section -->
-    <section class="features-section">
-        <div class="features-container">
-            <div class="section-header">
-                <div class="section-ornament">✦</div>
-                <h2>Why Choose WeddingClikzzz</h2>
-                <div class="section-ornament">✦</div>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📸</div>
-                    <h4>Professional Excellence</h4>
-                    <p>Award-winning photographers with 10+ years of experience in capturing Indian weddings</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎥</div>
-                    <h4>Cinematic Videography</h4>
-                    <p>State-of-the-art equipment and cinematic techniques for stunning wedding films</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">✨</div>
-                    <h4>Customized Packages</h4>
-                    <p>Flexible packages tailored to your specific requirements and budget</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💝</div>
-                    <h4>Personalized Service</h4>
-                    <p>Dedicated team ensuring every precious moment is beautifully captured</p>
-                </div>
-            </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
         </div>
     </section>
+
+    <!-- Main Booking Section -->
+    <main id="booking">
+        <section>
+            <div class="section-header">
+                <span class="section-label">Simple Booking Process</span>
+                <h2 class="section-title">Create Your Package</h2>
+                <p class="section-subtitle">Follow the steps below to customize your wedding photography package and receive an instant quote.</p>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="steps-container">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Select Events</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Choose Services</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Your Details</div>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review & Confirm</div>
+                </div>
+            </div>
+
+            <!-- Booking Container -->
+            <div class="booking-container">
+                <!-- Step 1: Event Selection -->
+                <div class="form-section active" id="step1">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Your Wedding Events</h3>
+                        <p class="section-subtitle">Choose one or more events you'd like us to cover.</p>
+                    </div>
+
+                    <div class="events-grid">
+                        <div class="event-card" data-event="reception">
+                            <input type="checkbox" name="event" value="reception">
+                            <div class="event-icon">💒</div>
+                            <h3>Reception</h3>
+                            <p>Grand celebration with family & friends</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="haldi">
+                            <input type="checkbox" name="event" value="haldi">
+                            <div class="event-icon">🌻</div>
+                            <h3>Haldi</h3>
+                            <p>Traditional turmeric ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="marriage">
+                            <input type="checkbox" name="event" value="marriage">
+                            <div class="event-icon">💍</div>
+                            <h3>Marriage</h3>
+                            <p>Sacred wedding ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="engagement">
+                            <input type="checkbox" name="event" value="engagement">
+                            <div class="event-icon">💎</div>
+                            <h3>Engagement</h3>
+                            <p>Ring ceremony celebration</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="mehendi">
+                            <input type="checkbox" name="event" value="mehendi">
+                            <div class="event-icon">✋</div>
+                            <h3>Mehendi</h3>
+                            <p>Beautiful henna ceremony</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="sangeet">
+                            <input type="checkbox" name="event" value="sangeet">
+                            <div class="event-icon">🎵</div>
+                            <h3>Sangeet</h3>
+                            <p>Musical night celebration</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="prewedding">
+                            <input type="checkbox" name="event" value="prewedding">
+                            <div class="event-icon">📸</div>
+                            <h3>Pre-Wedding Shoot</h3>
+                            <p>Romantic couple photoshoot</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="event-card" data-event="other">
+                            <input type="checkbox" name="event" value="other">
+                            <div class="event-icon">✨</div>
+                            <h3>Other Event</h3>
+                            <p>Custom event coverage</p>
+                            <div class="event-check">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <div></div>
+                        <button class="btn btn-primary" id="toStep2" disabled>
+                            Continue to Services
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Service Selection -->
+                <div class="form-section" id="step2">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Select Services for Each Event</h3>
+                        <p class="section-subtitle">Choose the photography and videography services you need for each event.</p>
+                    </div>
+
+                    <div id="servicesContainer">
+                        <!-- Dynamic services will be inserted here -->
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Events
+                        </button>
+                        <button class="btn btn-primary" id="toStep3" disabled>
+                            Continue to Details
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Customer Details -->
+                <div class="form-section" id="step3">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Your Details</h3>
+                        <p class="section-subtitle">Please provide your contact information for the invoice.</p>
+                    </div>
+
+                    <div class="details-form">
+                        <div class="form-group">
+                            <label>Full Name <span>*</span></label>
+                            <input type="text" id="clientName" placeholder="Enter your full name" required>
+                            <div class="error-message" id="clientNameError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter your full name</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Partner's Name</label>
+                            <input type="text" id="partnerName" placeholder="Enter partner's name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address <span>*</span></label>
+                            <input type="email" id="clientEmail" placeholder="your@email.com" required>
+                            <div class="error-message" id="clientEmailError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter a valid email address</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number <span>*</span></label>
+                            <input type="tel" id="clientPhone" placeholder="+91 98765 43210" required>
+                            <div class="error-message" id="clientPhoneError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please enter your phone number</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Wedding Date <span>*</span></label>
+                            <input type="date" id="weddingDate" required>
+                            <div class="error-message" id="weddingDateError">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Please select your wedding date</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Wedding Venue</label>
+                            <input type="text" id="weddingVenue" placeholder="Enter venue name & city">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Address</label>
+                            <textarea id="clientAddress" placeholder="Enter your complete address"></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Additional Notes</label>
+                            <textarea id="additionalNotes" placeholder="Any special requirements or requests..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Services
+                        </button>
+                        <button class="btn btn-primary" id="toStep4">
+                            Review & Generate Invoice
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review & Invoice -->
+                <div class="form-section" id="step4">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h3 class="section-title" style="font-size: 1.75rem;">Review Your Booking</h3>
+                        <p class="section-subtitle">Please review your selections and confirm to generate the invoice.</p>
+                    </div>
+
+                    <div class="review-layout">
+                        <div class="invoice-preview" id="invoicePreview">
+                            <!-- Invoice preview will be generated here -->
+                        </div>
+                        <div class="price-summary" id="priceSummaryFinal">
+                            <!-- Price summary will be generated here -->
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button class="btn btn-secondary" id="backToStep3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/>
+                            </svg>
+                            Back to Details
+                        </button>
+                        <button class="btn btn-primary" id="generateInvoice">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Download Invoice PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="form-section" id="successStep">
+                    <div class="success-container">
+                        <div class="success-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </div>
+                        <h2>Booking Confirmed!</h2>
+                        <p>Your invoice has been generated and downloaded. We've also sent a copy to your email.</p>
+                        <button class="btn btn-primary" id="startOver">
+                            Start New Booking
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="footer-content">
-            <div class="footer-section">
-                <div class="footer-logo">
-                    <span class="logo-ornament">❖</span>
-                    <span class="logo-text">WeddingClikzzz</span>
-                    <span class="logo-ornament">❖</span>
-                </div>
-                <p class="footer-tagline">Capturing Your Beautiful Moments</p>
+            <div class="footer-brand">
+                <h3>Wedding<span>Clickz</span></h3>
+                <p>At WeddingClickz Photography, we believe that every wedding is a story waiting to be told—authentically, artistically, and with heart.</p>
             </div>
-            <div class="footer-section">
-                <h4>Contact Us</h4>
-                <p>📞 +91 98765 43210</p>
-                <p>✉ info@weddingclikzzz.com</p>
-                <p>📍 Mumbai | Delhi | Bangalore | Jaipur</p>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="https://www.weddingclickz.com/">Home</a></li>
+                    <li><a href="https://www.weddingclickz.com/about-us/">About Us</a></li>
+                    <li><a href="https://www.weddingclickz.com/portfolio/">Portfolio</a></li>
+                    <li><a href="https://www.weddingclickz.com/galleries/">Gallery</a></li>
+                </ul>
             </div>
-            <div class="footer-section">
-                <h4>Services</h4>
-                <p>Wedding Photography</p>
-                <p>Cinematic Videography</p>
-                <p>Pre-Wedding Shoots</p>
-                <p>Destination Weddings</p>
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="tel:+919740222927">+91 97402 22927</a></li>
+                    <li><a href="mailto:info@weddingclickz.com">info@weddingclickz.com</a></li>
+                    <li><a href="#">Jayanagar, Bengaluru</a></li>
+                </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 WeddingClikzzz. All rights reserved.</p>
-            <p>Crafted with ❤️ for creating timeless memories</p>
+            <p>&copy; 2025 WeddingClickz Photography. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
-        <div class="spinner"></div>
-        <p>Generating invoice and sending email...</p>
-    </div>
-
-    <!-- Success Modal -->
-    <div id="successModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h3>Success!</h3>
-            <p>Your invoice has been generated and sent to your email.</p>
-            <button class="btn btn-primary" onclick="closeModal()">Close</button>
-        </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
     </div>
 
     <script src="script.js"></script>
